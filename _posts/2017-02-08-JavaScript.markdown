@@ -524,9 +524,33 @@ obj.style.cssText='width:200px;height:200px;'; // 会将当前行间样式清除
 ```
 <hr />
 
-### scrollTop兼容
+### bom属性兼容
 ```js
 const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+const clientWidth = document.documentElement.clientWidth || document.body.clientWidth;
+// etc..
 ```
 <hr />
 
+### keyEvent
+
+##### 组合键
+js中是不能用键码控制组合键的，这时候用到一些特别的键码，若按下返回true：
+
+- `oEvent.ctrlKey`;
+- `oEvent.shiftKey`;
+- `oEvent.altKey`;
+<hr />
+
+### 阻止默认事件
+```js
+/* usually */
+return false;
+
+/* ie */
+// 事件捕获
+obj.setCapture(); // 捕获当前所有事件
+// 释放捕获
+obj.releaseCapture();
+```
+<hr />
