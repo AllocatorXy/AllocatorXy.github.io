@@ -1,0 +1,221 @@
+---
+layout:     post
+title:      "我的CSS笔记"
+subtitle:   "我自己的CSS文档"
+date:       2017-02-08 12:00:00
+author:     "AllocatorXy"
+header-img: "img/css-bg.png"
+header-mask: 0.3
+catalog:    true
+tags:
+    - 前端开发
+    - CSS
+    - noteBook
+---
+
+## CSS
+
+### css选择器
+- 标签选择器
+    `h2{}`
+- 类选择器/class选择器
+    `.className{}`
+- id选择器   在一个页面中 只允许出现一次相同的id
+    `#div1{}`
+- 嵌套选择器
+    `div p span{}`
+- 群组选择器
+    `div,p,.a1{}`
+- 通配符
+    `*`
+#### css选择器优先级
+> 行间>id>class>标签>通配符* 
+
+### 伪类
+- 锚伪类
+    + a:link{ }       //未访问
+    + a:visited{ }    //访问过后
+    + a:hover{ }      //鼠标移入
+    + a:active{ }     //激活状态
+
+> 在 CSS 定义中，a:hover 必须被置于 a:link 和 a:visited 之后，才是有效的。
+  在 CSS 定义中，a:active 必须被置于 a:hover 之后，才是有效的。<br />
+**顺序为link > visited > hover > active  (lvha)** <br />
+**其中hover 和 active  可以给其他标签加**
+
+#### 伪类与 CSS 类
+```
+伪类可以与 CSS 类配合使用：
+a.red:visited {color: #FF0000}
+<a class="red" href="css_syntax.asp">CSS Syntax</a>
+```
+
+#### CSS:after 选择器
+- :after 选择器在被选元素的内容后面插入内容。
+- 请使用 content 属性来指定要插入的内容。
+`selector:after{content:"插入的内容"}`
+#### 伪类选择器nth-child系列
+
+### 下划线
+- 取消下划线
+    `text-decoration:none;`
+- 下划线
+    `text-decoration:underline;`
+- 中划线/贯穿线
+    `text-decoration:line-through;`
+- 上划线
+    `text-decoration:overline;`
+
+### font
+- size    //大小
+- style   //倾斜
+    + normal
+    + italic
+- weight  //粗细
+    + normal
+    + bold
+- family
+    + 英文
+    + 中文
+    + unicode(用的时候去掉u)
+- font:style weight size/line-height family; //其中只有style和weight是可选项
+
+### background
+    background
+              -color
+              -image
+              -repeat
+              -no-repeat
+              -repeat-x
+              -repeat-y
+              -position: left right center top bottom
+
+**当给一个值的时候 第二个值默认为center**
+**缩写**: background:#000 url no-repeat center;
+
+### padding 内边距(内填充)
+**简单来说，padding是在盒子内部加填充物，且会撑大盒子。**
+- 块元素支持四个方向的padding
+- 行内元素只支持左右的padding **不支持上下**
+- 简写顺序
+    + 四个值的时候  上  右  下  左 (从上开始顺时针)
+    + 三个值的时候  上   左右   下 
+    + 两个值的时候  上下      左右
+    + 一个值的时候  上  右  下  左       
+
+### margin 外边距
+- 块元素支持四个方向的margin
+- 行内元素只支持左右的margin **不支持上下**
+- 简写顺序
+    + 四个值的时候  上  右  下  左
+    + 三个值的时候  上   左右   下
+    + 两个值的时候  上下      左右
+    + 一个值的时候  上  右  下  左
+
+#### margin拖拽(子级把父级拉下来了)
+- **解决办法**：
+    + 给父级加边框
+    + 给父级加overflow：hidden
+    + 给父级加一个padding-top（推荐）
+#### margin合并(当两个垂直外边距相遇时，它们将形成一个外边距。)
+- 上下取最大值
+- 块元素margin上下合并 左右不合并
+- 行内元素margin左右不合并
+
+### 子元素溢出处理
+```
+white-space:nowrap;     //强制不换行
+overflow:hidden;        //溢出隐藏
+text-overflow:ellipsis; //省略号
+**需要给宽度，如果要省略号有效，上面三个样式都得加**
+
+//如果你想让小点跑到右下角 那你就加上一个font-family:'微软雅黑'；
+```
+
+### 元素类型转换
+    display:inline          //转化成行内
+            block           //块
+            inline-block    //行内块
+**行内元素即使转化成块 也不能包块**
+
+### css继承
+- 只有和文字相关的样式才能继承
+- a不能继承颜色
+- i em不能继承倾斜
+- b strong h不能继承加粗
+
+### 取消默认样式
+
+- 清除默认间距`*{ margin:0; padding:0;} // *会遍历所有元素，较大型网站中尽量避免`
+- 清除小点`li{ list-style:none;} ` 
+- 取消焦点框`input,select,textarea{ outline:none;}`
+- 取消拖拉`textarea{ resize:none;}`
+- 取消链接默认样式`a{text-decoration:none; color:#xxxxxx}`
+
+### 浮动float
+    float:left
+          right
+          none
+
+#### 特性
+- 合并到一行
+- 脱离文档流
+    + 影响下面的元素 不影响上面
+- 宽度不够,掉下来
+- 块元素浮动后,宽度会尽可能的窄,窄到内容的宽度
+- 行内元素浮动会变成块
+- 文本环绕
+- 尽可能的往上飘
+#### 清除浮动
+- 给父级加overflow:hidden;
+- 对父级设置适合的高度
+- 给父级以class的方式加
+    `.clearFix:after{content:''; display:block; clear:both;}`
+    `.clearFix{zoom:1;}`
+- 给一个空标签,然后加clear:both;
+
+```html
+    <style type="text/css">
+        .clear{clear:both}
+    </style>
+    <div class="box">
+        <div class="child1"></div>
+        <div class="child2"></div>
+        <div class="clear"></div>
+    </div>
+```
+
+#### 用到浮动的时候
+- 最好给宽
+- 用到浮动清浮动
+- 同级元素最好都浮动
+
+### 定位position
+
+| position: |     定位参照      | 脱离文档流 | 行内变块 |自由宽度的块元素变形|
+| -------:  |     :------:      |    :---:   |   :---:  |       :---:        |
+| relative; |       自身        |      ×     |     ×    |         ×          |
+| absolute; | 有定位的父级/body |      √     |     √    |         √          |
+| fixed;    |     可视区域      |      √     |     √    |         √          |
+
+>优先级：普通元素<浮动<定位，后写的标签层级比先写的高,positon可用于提升层级
+                      
+### z-index
+- 只有定位的元素才能使用
+- z-index：最大2^32
+
+### 透明度
+    opacity:0-1;                //webkit
+    filter:alpha(opacity:0-100) //ie
+
+### 已知宽高容器居中
+    margin: 0 -width/2; left:50%; //水平
+    margin: -height/2 0; top:50%; //垂直
+
+### css hacks
+    _   //ie6
+    *   //ie7
+    \9  //ie6 7 8
+    <!-- usage -->
+    selector{background-color:#000\9;}
+

@@ -1,0 +1,72 @@
+---
+layout:     post
+title:      "js封闭空间与自执行函数"
+subtitle:   "封闭空间主要用来防止全局函数名污染空间"
+date:       2017-02-14 14:03:00
+author:     "AllocatorXy"
+comments:   true
+header-img: "img/post-bg-js-module.jpg"
+header-mask: 0.3
+tags:
+    - 前端开发
+    - JavaScript
+---
+
+### 封闭空间和自执行函数
+
+封闭空间用来防止全局函数名污染空间，该函数名仅在封闭空间**`内部`**有效;<br />
+封闭空间可以用来写**`自执行函数`**;
+
+```javascript
+(function print() {
+    console.log('msg1');
+})();
+(function print() { // 函数名相同
+    alert('msg2');
+})();
+// console: msg1
+// alert: msg2
+```
+
+**`自执行函数`**可以是**`匿名函数`**
+
+```javascript
+(function () {
+    console.log('msg');
+})();
+// console: msg
+```
+
+封闭空间内函数可以传参,在执行括号内写参数值`(sth)`,在匿名函数声明时写参数;
+
+```javascript
+(function (arg) {
+    console.log(arg);
+})('msg');
+// console: msg
+```
+<hr />
+但要注意的是，封闭空间函数不能连续执行，只有**`第一次`**会被执行,<br />
+**猜想**: 第二个执行`('msg2')`不会识别封闭空间内的函数，而会把第一个执行`('msg')`误认为函数，<br />
+但第一个括号内并**不是**函数，而是一个参数，所以报错TypeError;
+
+```javascript
+(function (arg) {
+    alert(arg);
+})('msg1')('msg2');
+// alert: msg1
+// console: Uncaught TypeError: (intermediate value)(...) is not a function
+```
+
+**验证**:如果将**`返回值`**设为一个**`函数`**，返回后第一个执行获得函数，可以连续执行;
+
+```javascript
+(function (arg) {
+    alert(arg);
+    return function (arg) {
+        alert(arg);
+    };
+})('msg1')('msg2');
+// alert: msg1
+// alert: msg2
+```

@@ -1,0 +1,161 @@
+---
+layout:     post
+title:      "let&const declaration"
+subtitle:   "如何正确使用let&const, 暂时性死区怎么理解？"
+date:       2017-02-19 11:43:00
+author:     "AllocatorXy"
+comments:   true
+catalog:    true
+header-img: "img/post-bg-pot.jpg"
+header-mask: 0.3
+tags:
+    - 前端开发
+    - JavaScript
+---
+
+#### var & let & const
+**使用let和const需要用<font color="red">严格模式</font>**<br />
+
+- var只有全局作用域(只能依靠函数来限制作用域)，const&let**只有**块级作用域；
+- let或const声明的变量，会**绑定(Binding)**所在的块级作用域；
+- **let和const声明的全局变量不是全局对象的属性**，无法在window对象上直接获取这些变量，它们的作用域实际是所有函数的外层，一个不可见的块级作用域；
+- var可以重复声明**覆盖**同名变量，但let和const是**不能重复声明**的，会发生语法错误(SyntaxError)；
+- ~~var声明会提升(hoisting)，但const和let 是不会hoisting的；~~
+- const&let和var一样，也会发生**<a href="https://allocatorxy.github.io/2017/02/17/js-variable/" target="_blank">提升(hoisting)</a>**;
+- **var声明的变量可以在声明出现之前访问，但let和const是不能这样做的；**
+
+|  指令  |块级作用域|指令出现前访问|改变地址|重复声明|
+| :----: | :------: |    :---:     | :----: |  :--:  |
+|  var   |    ×     |      √       |    √   |    √   |
+|  let   |    √     |      ×       |    √   |    ×   |
+| const  |    √     |      ×       |    ×   |    ×   |
+
+<hr />
+
+##### 暂时性死区(Temporal Dead Zone)
+这里需要先看一下关于const和let，es6中是如何定义的;<br />
+**ES6 13.3.1 Let and Const Declarations**<br />
+>The variables are created when their containing Lexical Environment is instantiated but may not be accessed in any way until the variable’s LexicalBinding is evaluated.<br />
+>A variable defined by a LexicalBinding with an Initializer is assigned the value of its Initializer’s AssignmentExpression when the LexicalBinding is evaluated, not when the variable is created. If a LexicalBinding in a let declaration does not have an Initializer the variable is assigned the value undefined when the LexicalBinding is evaluated.<br />
+
+**这段话是在说什么呢？**<br />
+变量被创建时就已经在它们的文法环境下被实例化，但不会以任何方式被访问，直到这些变量被赋值。<br />
+一个变量的定义，是在对声明的赋值语句的求值后，才算初始化完成，而不是创建时。如果在`let`声明中没有赋初值，则`let`会被赋初始值`undefined`.
+
+由此我们可以得到几点信息：
+
+- 使用let和const声明的变量，**一开始就处于作用域内**；
+- 在变量被赋值之后才算完成变量的初始化；
+- 初始化完成的变量才可以被合法访问；
+
+这就很好理解**暂时性死区(Temporal Dead Zone 以下简称TDZ)**了：
+- let和const声明的变量，直到声明语句出现，位于**TDZ**中；
+- **<font color="red">以任何方式(包括typeof)访问处于TDZ中的变量，就会发生引用错误(ReferenceError)，而不再是undefined(已声明未定义)</font>**
+
+如果用`typeof`访问不存在的变量，会返回`undefined`，但如果在TDZ中这样做，会**<font color="red">直接挂掉</font>**;<br />
+**<font color="red" style="font-size: 20px;" >真的会死(/"≡ _ ≡)/~┴┴</font>**
+
+```js
+/* 非TDZ */                             /* TDZ */
+(function () {                       |  (function () { 
+    alert(typeof i); /* undefined*/  |      alert(typeof i); /* ReferenceError */
+})();                                |      let i = 1;
+                                     |  })();
+```
+
+**<font color="red" style="font-size: 20px;" >需要注意的是</font>**，TDZ的效果虽然很像是let和const不存在变量提升，但实际并不是如此：
+
+```js
+let a = 1;
+function fn() {      // 如果let是声明语句出现时才存在，这里会打印1
+    console.log(a);  // ReferenceError，说明let还是提升了，但不可访问
+    let a = 2;
+}
+fn();
+```
+<hr />
+
+##### let declaration
+- let自声明只在声明的**块级作用域**有效，并绑定该区域，且不再受外部影响;
+- 形如`for (let i...)`的循环在每次迭代时都为i**创建新的绑定**，包括`for in`, `for of`和`传统for循环`;
+
+`var`: 如果我想延迟循环`alert`出数组`arr`的每个值，直接用循环的话，会导致每次都弹出`undefined`，因为在定时器触发时，循环已经完毕，并且i是个全局变量，只保留了最后的值；<br />
+如果我想要用`var`实现效果，还需要某些辅助方法；
+
+```js
+var arr = [ 'a', 'b', 'c' ];
+for (var i = 0; i < arr.length; i++) {
+    setTimeout(function() {
+        alert(arr[i]);
+        }, i);
+}
+// alert: undefined undefined undefined
+```
+
+`let`: 但用let就可以简单实现效果，在每次迭代时，`i`都被创建了新的绑定在当次迭代的作用域；<br />
+
+相当于这个`for`每次迭代都会生成一个**<a href="https://allocatorxy.github.io/2017/02/15/js-closure/" target="_blank">闭包</a>**来捕获当次执行中`i`的值；<br />
+可以理解为：**每次迭代的`i`被固定成了常量(Constant)，`i`在循环完毕后被销毁了**，这就很像c语言中的循环了；
+
+```js
+var arr = [ 'a', 'b', 'c' ];
+for (let i = 0; i < arr.length; i++) {
+    setTimeout(function() {
+        alert(arr[i]);
+        }, i);
+}
+// alert: a b c
+```
+
+因为`let`的特性，可以在块作用域中设置**闭包**了(虽然可以运行不过**最好不要**这样做)：
+
+```js
+if (true) {
+    let n = 0;
+    function aaa() {
+        n++;
+        return n;
+    }
+}
+alert(aaa());   // 1
+alert(aaa());   // 2
+alert(aaa());   // 3
+alert(n);       // ReferenceError: not defined
+```
+<hr />
+
+###### for循环中的let
+>for循环还有一个特别之处，就是循环语句部分是一个父作用域，而循环体内部是一个单独的子作用域。下面代码输出了3次abc，**这表明函数内部的变量i和外部的变量i是分离的**。<br />
+<a href="http://es6.ruanyifeng.com/#docs/let" target="_blank">ECMAScript 6 入门-let和const命令 —— 阮一峰</a>
+
+```js
+for (let i = 0; i < 3; i++) {
+  let i = 'abc';
+  console.log(i);
+}
+// abc
+// abc
+// abc
+```
+<hr />
+
+##### const declaration
+`const`命令用来声明**<font color="red">常变量(Constant Variable)</font>**<br />
+
+- 与`let`相同，`const`自声明只在声明的**块级作用域**有效，并绑定该区域，且不再受外部影响;
+- 如果试图改变const的地址，会报错`TypeError: Assignment to constant variable`;
+- 常变量(Constant Variable)，值可以被改变，但地址不能被改变;
+- const在声明时必须初始化，不然会报错`SyntaxError: Missing initializer in const declaration`;
+
+```js
+const num = 1;
+num = 2; // TypeError: Assignment to constant variable.
+const a; // SyntaxError: Missing initializer in const declaration
+
+for (const prop in obj) { // available
+  alert(typeof prop);     // string
+}
+for (const i = 0; i < n; i++) { // TypeError: Assignment to constant variable.
+  // statement..
+}
+```

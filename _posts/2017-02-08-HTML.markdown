@@ -1,0 +1,197 @@
+---
+layout:     post
+title:      "我的HTML笔记"
+subtitle:   "我自己的HTML文档"
+date:       2017-02-08 00:55:00
+author:     "AllocatorXy"
+header-img: "img/html-bg.png"
+header-mask: 0.3
+catalog:    true
+tags:
+    - 前端开发
+    - HTML
+    - noteBook
+---
+
+## HTML
+
+### 块标签
+`div h1-h6 p`
+
+- 独占一行
+- 支持宽高
+- 不给宽度的时候 宽度会参照父级
+- 不受换行和空格的影响
+    
+### 行内标签
+`span i em b strong a`
+
+- 合并到一行
+- 不支持宽高
+- 宽高由内容撑开
+- 受换行和空格的影响
+- 行内块标签(例如img)
+    + 支持宽高
+    + 合并到一行
+    + 受换行和空格的影响
+
+### a标签的target
+```html
+    <!-- 在某框架内加载 -->
+    <a href="..." target="myframe">
+    <iframe name="myframe"></iframe> //指定frame的name属性
+    
+    <!-- 在新窗口加载 -->
+    <a href="..." target="_blank"></a>
+    
+    <!-- 在本窗口加载(默认值) -->
+    <a href="..." target="_self"></a>
+```
+
+### 锚点
+```html
+    <a href="#myid"></a>
+    <p id="myid"></p>
+    
+    <!-- 锚点可以直接跳到另一个网页中 -->
+    <a href="xxx.html#myid"></a>
+```
+
+### 不换行的空标签
+    <span></span>
+
+### 换行的空标签
+    <div></div>
+
+### 标签语义化
+
+- 具体的标签有具体的意义
+    + 标题  h
+    + 段落  p
+    + 链接  a
+    + 图片  img
+    + 强调  em
+    + 强调  strong
+    + 换行  br
+- 没有语义化`div span i b`
+
+### 嵌套
+- 块能包所有
+- p只能包行内
+- 行内只能包行内，但是不能包自己
+- a能包所有，但是不能包自己
+- img能被所有包
+
+### 列表
+
+#### 无序列表
+```html
+    <ul>               /*unordered lists*/
+        <li></li>      
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+```
+
+#### 有序列表
+```html
+    <ol>            /*ordered lists*/
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ol>
+```
+
+#### 定义列表
+```html 
+    <dl>                      /*defined lists*/
+        <dt>蔬菜</dt>         /*标题defined title*/   
+        <dd>白菜</dd>         /*内容defined definition*/
+        <dd>黄瓜</dd>
+        <dd>土豆</dd>
+        <dd>油麦菜</dd>
+        <dd>生菜</dd>
+    </dl>
+```
+
+### table
+```html
+    <table cellspacing="0" cellpadding="0">
+        <thead>                   //表头
+            <tr>
+                <th>表头</th>
+                <th>表头</th>
+                <th>表头</th>
+                <th>表头</th>
+            </tr>
+        </thead>
+        <tbody>                   //表身
+            <tr>
+                <td>表身</td>
+                <td>表身</td>
+                <td>表身</td>
+                <td>表身</td>
+            </tr>
+        </tbody>
+        <tfoot>                   //表尾
+            <tr>
+                <td>表尾</td>
+                <td>表尾</td>
+                <td>表尾</td>
+                <td>表尾</td>
+            </tr>
+        </tfoot>
+    </table>
+```
+
+#### 合并重复边框
+     table{border-collapse:collapse;}
+
+#### 合并单元格
+     colspan = "n" //横向
+     rowspan = "n" //纵向
+     <!-- 这个是属性不是css -->
+
+### 表单form
+```html
+    <!-- method有get和post两种，get为明文传输 -->
+    <form action = "url" method = "post"> 
+    </form>
+```
+
+### input
+
+- type
+    + text        //文本框
+    + password    //密码
+    + submit      //提交
+    + file        //上传
+    + image       //图片
+    + hidden      //悄悄话
+    + radio       //单选
+- name
+- value
+- id
+- lable
+    + for="id"
+
+### checkbox 多选
+
+- name
+- value
+- id
+- lable
+    + for="id"
+
+### select 下拉框
+```html
+    <select>
+        <option>北京</option>
+        <option>上海</option>
+        <option>东莞</option>
+    </select>
+    
+    <!-- 记得给option加value -->
+```

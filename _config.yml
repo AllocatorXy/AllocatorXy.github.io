@@ -1,0 +1,102 @@
+# Site settings
+title: AllocatorXy
+SEOTitle: 惜缘 | AllocatorXy
+header-img: img/post-bg-universe.jpg
+email: AllocatorXy@foxmail.com
+description: "AllocatorXy Blog"
+keyword: "惜缘, AllocatorXy"                           #"key1, key2"
+url: "https://AllocatorXy.github.io"              # your host, for absolute URL
+baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+
+
+
+# SNS settings
+RSS: false
+weibo_username:     AllocatorXy
+# zhihu_username:     huxpro
+github_username:    AllocatorXy
+#twitter_username:  huxpro
+# facebook_username:  huxpro
+# linkedin_username:  firstname-lastname-idxxxx
+
+
+
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+highlighter: rouge
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+
+
+# Disqus settings
+# disqus_username: allocatorxydq
+
+# Duoshuo settings
+duoshuo_username: allocatorxyds
+# Share component is depend on Comment so we can NOT use share only.
+duoshuo_share: true                     # set to false if you want to use Comment without Sharing
+
+
+
+
+# Analytics settings
+# Baidu Analytics 
+# ba_track_id: [your track id]
+
+# Google Analytics
+# ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+# ga_domain: huangxuan.me
+
+
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "&emsp;&emsp;因为另一个人，<br />&emsp;&emsp;&emsp;&emsp;想要变得更好。"
+sidebar-avatar: /img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+
+
+# Featured Tags
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+
+
+
+# Progressive Web Apps
+chrome-tab-theme-color: "#000000"
+service-worker: true
+
+
+
+# Friends
+# friends: [
+#     {
+#         title: "Su",
+#         href: "http://su.gallery/"
+#     },{
+#         title: "乱序",
+#         href: "http://mida.re/"
+#     },{
+#         title: "前端外刊评论",
+#         href: "http://qianduan.guru/"
+#     }
+# ]

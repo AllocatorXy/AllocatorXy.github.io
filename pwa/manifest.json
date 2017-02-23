@@ -1,0 +1,15 @@
+{
+  "name": "AllocatorXy",
+  "short_name": "AllocatorXy",
+  "description": "A person is full of curiosity.",
+  "icons": [{
+    "src": "icons/icon.png",
+    "sizes": "72x72",
+    "type": "image/png"
+  }],
+  "background_color": "#fff",
+  "theme_color": "#000",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
