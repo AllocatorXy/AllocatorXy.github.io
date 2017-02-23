@@ -554,3 +554,13 @@ obj.setCapture(); // 捕获当前所有事件
 obj.releaseCapture();
 ```
 <hr />
+
+### 事件冒泡
+文档流中，触发子级事件会逐级依次触发父级事件，称为**事件冒泡**;<br />
+在某些情况下我们需要取消事件冒泡：
+
+```js
+oEvent.cancelBubble = true; // ie, 但可兼容其他浏览器
+oEvent.stopPropagation();   // chrome etc..
+```
+<hr />
