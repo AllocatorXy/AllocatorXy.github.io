@@ -422,7 +422,7 @@ Math.min();      // 求最小值
 获取node后可以用node获取tag名：
 ```js
 const obj = document.getElementById('id');
-obj.tagName
+obj.tagName = 'LI'; // UpperCase
 ```
 
 ##### offset
@@ -532,7 +532,7 @@ const clientWidth = document.documentElement.clientWidth || document.body.client
 ```
 <hr />
 
-### keyEvent
+### Event
 
 ##### 组合键
 js中是不能用键码控制组合键的，这时候用到一些特别的键码，若按下返回true：
@@ -542,20 +542,28 @@ js中是不能用键码控制组合键的，这时候用到一些特别的键码
 - `oEvent.altKey`;
 <hr />
 
-### 阻止默认事件
+##### 阻止默认事件
 ```js
 /* usually */
 return false;
 
 /* ie */
-// 事件捕获
-obj.setCapture(); // 捕获当前所有事件
+// 鼠标事件捕获
+obj.setCapture && obj.setCapture(); // 捕获当前鼠标事件
 // 释放捕获
-obj.releaseCapture();
+obj.setCapture && obj.setCapture();
+
+/* 兼容 */
+function stopDef(e){
+    const oE = e || event;
+    oE.preventDefault ?
+    oE.preventDefault() :
+    window.event.returnValue = false;
+}
 ```
 <hr />
 
-### 事件冒泡
+##### 事件冒泡
 文档流中，触发子级事件会逐级依次触发父级事件，称为**事件冒泡**;<br />
 在某些情况下我们需要取消事件冒泡：
 
@@ -563,4 +571,88 @@ obj.releaseCapture();
 oEvent.cancelBubble = true; // ie, 但可兼容其他浏览器
 oEvent.stopPropagation();   // chrome etc..
 ```
+<hr />
+
+#### 绑定与委托
+
+##### 事件绑定(监听)
+我们有时会遇到这样的情况：同一个对象需要有**多个事件**，或多个文件中有多个事件需要**文档加载完成**后执行的代码，那么我们就不能再对对象加单个事件了，事件连等也不能完全解决我们的需要，这时候我们就需要**事件绑定**了。
+
+- 非ie：`addEventListener`:
+
+```js
+obj.addEventListener('event', function() {
+        // statement..
+    }, useCapture); // Boolean; true:使用事件捕获，反转事件流; false:冒泡;
+                    // true的优先级大于false,同时出现true,父级优先;
+```
+
+- 兼容ie:
+
+```js
+obj.attachEvent('on' + 'event');
+```
+
+- 兼容写法：
+```js
+Object.prototype.adEv = function(ev, fn) {
+    if (this.addEventListener) {
+        this.addEventListener(ev, fn, false);
+    } else {
+        this.attachEvent('on' + ev, fn);
+    }
+};
+```
+
+##### 解除绑定
+解除绑定(**<font color="red">无法解除绑定的匿名函数</font>**), 因为匿名函数实际是每次都用`constructor`生成了新函数;
+
+```js
+Object.prototype.rmEv = function(ev, fn) { // 必须指定函数名
+    if (this.removeEventListener) {
+        this.removeEventListener(ev, fn, false);
+    } else {
+        this.detachEvent('on' + ev, fn);
+    }
+};
+```
+
+##### 事件源
+事件源指**<font color="red">第一个</font>**触发事件的对象，可以通过事件对象获取：
+
+```js
+function a(e) {
+    const oE = e || event;
+    const target = oE.srcElement || oE.target;
+    alert(target.tagName); // 这里获取的标签名是大写，如果用标签名匹配记得大写
+}
+```
+
+##### 事件委托
+事件冒泡会触发父级元素的事件，所以通过在父级绑定事件获取事件源，再对事件源进行操作，可以**间接实现**对子级的事件绑定，这叫做**事件委托**
+>子元素的事件可以委托给**自身的父级元素**，在点击子级时会触发绑定给父级的事件;<br />
+另外，**无论子级层级高低都可以点透到子级**;
+
+1. 提高性能(减少迭代);
+2. 可以给未来的元素加事件;
+
+```js
+oUl.onclick = function(ev) { // 添加点击事件给父级
+    var oEvent = ev || event;
+    var oS = oEvent.srcElement || oEvent.target; //  获取点击的事件源(父级及所有子代)
+    if (oS.tagName == 'LI') { // 用某种方法匹配到需要元素
+        oS.style.background = 'red';
+    }
+};
+```
+<hr />
+
+### this指针
+
+this的**错误**用法:
+
+1. 定时器中不能使用this;
+2. 事件中套了一层函数;
+3. 行间事件套了一层;
+4. attachEvent中不能使用this;
 <hr />
