@@ -33,8 +33,9 @@ $('selector').animate(styles, options);
 ```javascript
 /* 终止当前动画后再开始新动画以解决用户快速多次触发后根本停不下来的问题 */
 
-// stop(stopAll, goToEnd) 第一个参数是否停止当前动画，第二个是否到达末状态
-
+// stop(stopAll, goToEnd)
+// stopAll: 是否停止被选元素的所有加入队列的动画
+// goToEnd: 是否允许完成当前的动画
 $('selector').stop().animate(...) // 停止元素当前动画并继续下个动画
 
 $('selector').stop(true).animate(...) // 停止元素的所有动画

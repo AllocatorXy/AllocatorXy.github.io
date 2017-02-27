@@ -18,7 +18,10 @@ sublime最让人蛋疼的一点就是：**<font color="red" style="font-size: 18
 <hr />
 
 ##### node.js
-SublimeLinter依赖于node.js, 所以最开始我们需要安装**<a target="_blank" href="https://nodejs.org/en/">node.js</a>**;
+SublimeLinter依赖于node.js, 所以最开始我们需要安装**<a target="_blank" href="https://nodejs.org/en/">node.js</a>**<br />
+
+**注意需要将npm<a style="color: red;" href="http://www.runoob.com/nodejs/nodejs-npm.html">初始化</a> <= <font color="blue">不会戳这里</font>** - added on Feb.27th
+
 
 ##### SublimeLinter
 首先要确认sublime有没有安装`package control`, 如果没有安装：在sublime中按``ctrl+` ``打开控制台，然后输入下面这段代码后按`enter`, 安装package control.

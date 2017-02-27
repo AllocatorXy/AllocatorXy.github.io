@@ -648,7 +648,7 @@ oUl.onclick = function(ev) { // 添加点击事件给父级
 <hr />
 
 ### this指针
-
+方法属于谁，this指向谁
 this的**错误**用法:
 
 1. 定时器中不能使用this;
