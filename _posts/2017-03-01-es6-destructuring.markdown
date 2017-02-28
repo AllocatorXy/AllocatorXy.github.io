@@ -10,7 +10,7 @@ header-mask: 0.3
 tags:
     - 前端开发
     - JavaScript
-    - CSS
+    - ES6
 ---
 
 ### 解构(Destructuring)

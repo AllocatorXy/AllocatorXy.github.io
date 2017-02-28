@@ -4,7 +4,7 @@ title:      "我的jq笔记"
 subtitle:   "记录用jq踩的坑"
 date:       2017-02-27 18:30:00
 author:     "AllocatorXy"
-header-img: "img/css-bg.png"
+header-img: "img/post-bg-js-module.jpg"
 header-mask: 0.3
 catalog:    true
 tags:
