@@ -2,10 +2,10 @@
 layout:     post
 title:      "jq动画使用"
 subtitle:   "如何用animate做出好使的hover标签"
-date:       2017-02-12 20:24:00
+date:       2017-02-20 20:24:00
 author:     "AllocatorXy"
 comments:   true
-header-img: "img/post-bg-js-module.jpg"
+header-img: "img/js-logo.png"
 header-mask: 0.3
 tags:
     - 前端开发
@@ -47,4 +47,4 @@ $(selector).stop(stopAll, goToEnd)
 
 如果这样还是觉得不满意呢，我们可以用到第二个参数，只在移入时加入`stop(true, true)`就是这个<font style="background-color: #666; border-radius: 20%; color: white;">小灰块</font>的效果了：
 
-<iframe src="https://allocatorxy.github.io/anitags/" frameborder="0" scrolling="no" style="overflow: hidden; width: 480px; height: 200px; margin: 0 auto;"></iframe>
+<iframe src="https://allocatorxy.github.io/anitags/" frameborder="0" scrolling="no" style="overflow: hidden; width: 480px; height: 200px; margin-left: -240px; position: relative; left: 50%;"></iframe>

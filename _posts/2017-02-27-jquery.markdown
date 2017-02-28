@@ -9,6 +9,7 @@ header-mask: 0.3
 catalog:    true
 tags:
     - 前端开发
+    - JavaScript
     - jQuery
     - noteBook
 ---
@@ -82,4 +83,5 @@ $.trim(str)     // 去除首尾空格
 $.type(sth)     // 测试类型
 ```
 <hr />
+
 

@@ -24,10 +24,10 @@
 .highlight .err { color: #a61717; /*background-color: #e3d2d2;*/ }
 .highlight .k { /*font-weight: bold;*/ color: #626fc9; }
 .highlight .o { /*font-weight: bold;*/ color: #626fc9; }
-.highlight .cm { color: #999988; font-style: italic; }
+.highlight .cm { color: #999988; /*font-style: italic;*/ }
 .highlight .cp { color: #999999; font-weight: bold; }
-.highlight .c1 { color: #999988; font-style: italic; }
-.highlight .cs { color: #999999; font-weight: bold; font-style: italic; }
+.highlight .c1 { color: #999988; /*font-style: italic;*/ }
+.highlight .cs { color: #999999; font-weight: bold; /*font-style: italic;*/ }
 .highlight .gd { color: #000000; background-color: #ffdddd; }
 .highlight .gd .x { color: #000000; background-color: #ffaaaa; }
 .highlight .ge { font-style: italic; }
