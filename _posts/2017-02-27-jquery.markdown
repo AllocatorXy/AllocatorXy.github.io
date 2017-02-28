@@ -13,3 +13,73 @@ tags:
     - noteBook
 ---
 
+### 获取位置
+这个和原生是**<font color="red">反的</font>**：
+
+```js
+/* 到定位父级 */
+$(selector).position().left 
+$(selector).position().top
+
+/* 绝对位置 */
+$(selector).offset().left
+$(selector).offset().top
+```
+<hr />
+
+### 获取尺寸
+```js
+/* 原生 */
+obj.offsetWidth
+obj.offsetHeight
+
+/* jQuery */
+$(selector).width()       // 内容宽高,不包含border和padding
+$(selector).height()
+
+$(selector).innerWidth()  // 里侧宽高: 内容宽高 + padding
+$(selector).innerHeight()
+
+$(selector).outerWidth()  // 外侧宽高: 内容宽高 + padding + border
+$(selector).outerHeight()
+
+$(window).width()         // clientWidth
+$(window).height()        // clientHeight
+```
+<hr />
+
+### DOM操作
+```js
+A.append(B);        // 在A里面追加B (后面)
+
+A.prepend(B);       // 在A里面追加B (前面)
+
+A.appendTo(B);      //把A放到B里面(后面)
+
+A.prependTo(B);     //把A放到B里面(前面)
+
+A.after(B);         //把B放到A后面 (外面)
+
+A.before(B);        //把B放到A前面 (外面)
+
+A.insertAfter(B);   //把A放到B后面 (外面)
+
+A.insertBefore(B);  //把A放到B前面(外面)
+
+$('Element').remove('id/css/tag/嵌套/...'); // 删除匹配到的元素，若匹配为空则删除所有元素
+
+////////////////////////////////////////////////////////////
+// 注意这样删除的元素不会彻底删除，还会保存在jQuery对象中 //
+////////////////////////////////////////////////////////////
+
+```
+<hr />
+
+### 小工具
+```js
+$.browser.msie  // is that ie? false/true
+$.trim(str)     // 去除首尾空格
+$.type(sth)     // 测试类型
+```
+<hr />
+

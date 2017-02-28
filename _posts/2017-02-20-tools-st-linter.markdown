@@ -20,7 +20,7 @@ sublime最让人蛋疼的一点就是：**<font color="red" style="font-size: 18
 ##### node.js
 SublimeLinter依赖于node.js, 所以最开始我们需要安装**<a target="_blank" href="https://nodejs.org/en/">node.js</a>**<br />
 
-**注意需要将npm<a style="color: red;" href="http://www.runoob.com/nodejs/nodejs-npm.html">初始化</a> <= <font color="blue">不会戳这里</font>** - added on Feb.27th
+**注意需要将npm<a style="color: red;" href="http://www.runoob.com/nodejs/nodejs-npm.html">初始化</a> <= <font color="blue">不会戳这里</font>** *- added on Feb.27th*
 
 
 ##### SublimeLinter
