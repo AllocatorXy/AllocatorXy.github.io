@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "临时阻止transition"
-subtitle:   ""
+subtitle:   "如何用transition做出一个无缝的幻灯片"
 date:       2017-02-18 11:25:00
 author:     "AllocatorXy"
 comments:   true
@@ -12,5 +12,60 @@ tags:
     - JavaScript
     - CSS
 ---
+### 动机
+看到淘宝的slider是用transition做的，就自己试着用transition做一个同样效果的幻灯片播放器，但发现了一个问题：无论最后如何设置复位图片，都会触发transition，不能达到视觉上的无缝衔接。
+
+突然想到，那**每次让它复位时transition为0**，复位完毕**再加上transition属性**不就好了:
+
+```js
+const oDiv = document.querySelector('div');
+oDiv.style.transition = '0';            // 设置transition为0
+oDiv.style.transform = 'translateX(0)'; // 复位图片
+oDiv.style.transition = '.3s';          // 复位后设置transition
+```
+
+结果神奇的事情发生了：**<font color="red">还是会触发transition！！</font>**
+<hr />
+
+### 搞事
+我们在用js改变css样式时，是这样的过程：<br />
+`赋值 => 消息进入队列 => 轮到css赋值消息 => Recalculate Style => Layout => Paint`<br />
+js在改变css样式时，它做的事情其实只是**赋值**而已，而在这个栗子中，我们的赋值消息是在**同一个消息处理**中的，那么在轮到Recalculate Style时，这两条赋值是被一起计算的。
+
+那么我们为了解决这个问题，可以有**两种思路**:
+- 将这两个设置transition的语句，分别扔到**两个消息**中；
+- 或者当复位图片的语句赋值完毕之后，让它**立马**进行Recalculate Style；
+<hr />
+
+**方法1：加入新消息**
+
+```js
+// 用两个消息解决：
+const oDiv = document.querySelector('div');
+oDiv.style.transition = '0';            // 设置transition为0
+oDiv.style.transform = 'translateX(0)'; // 复位图片
+
+setTimeout(function() {                 // 在新的消息中设置transition
+    oDiv.style.transition = '.3s';
+}, 0);
+```
+
+虽然这个定时器时间为0，但因为js是**单线程**的，在处理完当前消息之前是**不会**处理下一条消息的，所以这个定时器一定会在上面的语句实际执行完后才执行。
+<hr />
+
+**方法2：立即计算样式**
+
+```js
+// 用getComputedStyle方法让浏览器立即处理复位的赋值消息：
+const oDiv = document.querySelector('div');
+oDiv.style.transition = '0';             // 设置transition为0
+oDiv.style.transform = 'translateX(0)';  // 复位图片
+getComputedStyle(oDiv, false).transform; // 强制计算样式
+
+oDiv.style.transition = '.3s';           // 将transition调回去
+```
+<hr />
+
+**demo：**
 
 <iframe src="https://allocatorxy.github.io/js-demo-slide/" frameborder="0" width="300px" height="200px" scrolling="none" style="position: relative;margin-left: -150px;left: 50%;"></iframe>

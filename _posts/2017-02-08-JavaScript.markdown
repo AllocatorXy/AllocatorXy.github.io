@@ -350,6 +350,12 @@ const json='{ a:1, b:2 }';
 const fn=new Function('return' + json);
 const json1 = fn(); // 解析的json
 ```
+
+##### JSON转换
+```js
+JSON.stringify('{"a":1,"b":2}'); // object to stirng
+JSON.parse({"a":1,"b":2});       // string to object
+```
 <hr />
 
 ### Math(本地对象)

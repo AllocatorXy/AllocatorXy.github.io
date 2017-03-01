@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "ES6 解构(Destructuring)"
-subtitle:   "让人头大又很好使的解构"
+subtitle:   "让人头疼又很好使的解构"
 date:       2017-03-01 03:39:00
 author:     "AllocatorXy"
 comments:   true
