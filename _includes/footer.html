@@ -236,7 +236,7 @@
             l = $('<li class="'+n+'_nav"></li>').append(c);
             $(selector).append(l);
         });
-        return true;    
+        return true;
     }
 
     generateCatalog(".catalog-body");
@@ -245,7 +245,7 @@
     $(".catalog-toggle").click((function(e){
         e.preventDefault();
         $('.side-catalog').toggleClass("fold")
-    }))
+    }));
 
     /*
      * Doc: https://github.com/davist11/jQuery-One-Page-Nav

@@ -10,6 +10,7 @@ catalog:    true
 tags:
     - 前端开发
     - 工具
+    - Sublime Text
 ---
 
 ### 准备工作

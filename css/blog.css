@@ -112,14 +112,17 @@
   padding-left: 0px;
 }
 .catalog-container {
-  padding: 0px;
+  overflow: hidden;
+  padding: 0;
 }
 .side-catalog {
   display: block;
   overflow-y: auto;
+  overflow-x: hidden;
   height: 100%;
   padding-bottom: 40px;
   width: 195px;
+  position: relative;
 }
 .side-catalog::-webkit-scrollbar {
   width: 4px;
@@ -136,6 +139,8 @@
 .side-catalog.fixed {
   position: fixed;
   top: -21px;
+  /* hack to solve the twitch of fixed catalog */
+  -webkit-transform: translateZ(0);
 }
 .side-catalog.fold .catalog-toggle::before {
   content: "+";
@@ -154,7 +159,7 @@
   list-style: none;
   height: auto;
   overflow: hidden;
-  padding-left: 0px;
+  padding-left: 0;
   padding-right: 5px;
   text-indent: 0;
 }
@@ -209,6 +214,7 @@
 }
 .side-catalog .catalog-body .active a {
   color: #0085a1!important;
+  transform: scale(1.05, 1.05);
 }
 @media (max-width: 1200px) {
   .side-catalog {
@@ -259,12 +265,11 @@ h4 {
 }
 a {
   color: #404040;
-  transition: color .3s, border-color .3s, background-color .3s, transform .1s;
+  transition-duration: .3s;
 }
 a:hover,
 a:focus {
   color: #0085a1;
-  transform: scale(1.05, 1.05);
 }
 a img:hover,
 a img:focus {
@@ -967,6 +972,7 @@ img::-moz-selection {
   border-color: white;
   background-color: rgba(255, 255, 255, 0.4);
   text-decoration: none;
+  transform: scale(1.05, 1.05);
 }
 @media only screen and (min-width: 768px) {
   .tags a,

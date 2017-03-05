@@ -355,6 +355,9 @@ const json1 = fn(); // 解析的json
 ```js
 JSON.stringify('{"a":1,"b":2}'); // object to stirng
 JSON.parse({"a":1,"b":2});       // string to object
+/*
+ * JSON.parse() 解析的对象最后一个不能加逗号
+ */
 ```
 <hr />
 

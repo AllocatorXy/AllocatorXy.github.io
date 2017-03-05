@@ -83,12 +83,8 @@ $('Element').remove('id/css/tag/嵌套/...'); // 删除匹配到的元素，若�
 $.browser.msie  // is that ie? false/true
 $.trim(str)     // 去除首尾空格
 $.type(sth)     // 测试类型
+$(parent).find(selector) // 匹配父元素中符合条件的后代元素
 ```
 <hr />
 
-### .find()
-```js
-$(selector).find(selector) // 匹配第一个选择器中符合条件的后代元素
-```
-<hr />
 

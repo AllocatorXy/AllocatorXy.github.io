@@ -1,0 +1,227 @@
+---
+layout:     post
+title:      "ajax和jsonp"
+subtitle:   "js中的数据交互"
+date:       2017-03-03 04:12:00
+author:     "AllocatorXy"
+comments:   true
+catalog:    true
+header-img: "img/bg-data0101.jpg"
+header-mask: 0.3
+tags:
+    - 前端开发
+    - JavaScript
+---
+
+### AJAX
+AJAX(Asynchronous JavaScript and XML)是用来在不重新加载整个页面的情况下，与服务器交互数据的一种技术；<br />
+一次ajax请求一般经过四个步骤:
+1. 建立`XHR(XMLHttpRequest)`对象(老版本IE是`ActiveXObject`);
+2. 打开连接，指定参数: `method, url, async`;
+3. 发送请求到服务器
+4. 监控ajax状态，根据`readystate`判断ajax是否完成，根据http状态码确定请求是否成功:
+
+##### readystate
+
+|readystate|状态说明                                    |
+|:-:|:--                                                |
+|0  |Uninitialized: ajax对象准备完毕, 未调用`open()`方法|
+|1  |Loading: 已打开并建立连接,`send()`方法已被调用     |
+|2  |Loaded: `send()`方法调用完毕，已收到完整回应       |
+|3  |Interactive: 回应内容正在被处理                    |
+|4  |Completed: 回应已被处理完毕，内容可调用            |
+
+##### HTTP状态码(HTTP Status Code)
+
+|status|代表的意义                            |
+|:---: |:--                                   |
+|1XX   |消息，代表请求已被接受，将继续执行    |
+|2XX   |成功，代表请求已成功                  |
+|3XX   |重定向(重新定向地址)                  |
+|4XX   |请求错误                              |
+|5/6XX |服务器错误                            |
+
+**<font color="red">特别地</font>**，当状态码是<font color="red">304(Not Modified)</font>时，说明缓存中数据还可以使用，不需要重新获取数据，所以304一般也可当作成功处理。
+<hr />
+
+##### 原生ajax封装
+```js
+function json2url(json) {
+    json.t = Math.random(); // 生成随机数规避读取缓存
+    var arr = [];
+    for (var name in json) {
+        arr.push(name + '=' + json[name]);
+    }
+    return arr.join('&');
+}
+/**
+ * @param json
+ * json.url:请求地址
+ * json.data:提交数据、参数
+ * json.time:超时时间
+ * json.method: get / post
+ * json.success:fn
+ * json.error:fn
+ */
+function ajax(json) {
+    var json = json || {};
+    if (!json.url) {
+        console.log('error: empty url');
+        return;
+    }
+    json.data = json.data || {};
+    json.method = json.method || 'GET';
+    // 建立ajax对象
+    if (window.XMLHttpRequest) {
+        var oAjax = new XMLHttpRequest();
+    } else {
+        var oAjax = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+    // 建立和打开连接
+    switch (json.method.toLowerCase()) {
+        case 'post':
+            oAjax.open('POST', json.url, true);
+            // 设置一个请求头
+            oAjax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); 
+            oAjax.send(json2url(json.data));
+            break;
+        case 'get':
+            oAjax.open('GET', json.url + '?' + json2url(json.data), true);
+            oAjax.send();
+            break;
+    }
+    // 监控状态
+    oAjax.onreadystatechange = function() {
+        if (oAjax.readyState == 4) {
+            if (oAjax.status >= 200 && oAjax.status < 300 || oAjax.status == 304) {
+                // 成功的回调函数
+                json.success && json.success(oAjax.responseText);
+            } else {
+                // 失败的回调函数
+                json.error && json.error(oAjax.status);
+            }
+        }
+    };
+}
+```
+
+##### Attention
+- 有时我们并不想让浏览器优先读取Cache，而是每次请求都会让数据立即更新，这时候我们可以通过更改接口url解决(url后面加个会变的东西比如随机数/日期)；
+- `post`方法需要设置一个请求头, jq中是`content-type`属性;
+- json和string转换:
+    + 序列化: `JSON.stringify(json);`
+    + 反序列化: `JSON.parse(string);`
+- 当遇到中文等特殊文字时，需要编码和解码:
+    + 编码: `encodeURIComponent(string);`
+    + 解码: `decodeURIComponent(string);`
+<hr />
+
+### JSONP
+>JSON(JavaScript Object Notation);<br />
+>JSONP(JSON with Padding);
+
+初次看到JSONP这个缩写，还以为是json plus，一种新的数据格式;<br />
+但其实JSON和JSONP就是雷锋和雷峰塔的关系;(手动滑稽<br />
+ajax和jsonp是同级的，它们是两种**数据交互方式**;
+
+为什么要用jsonp呢？因为ajax有一个**盲点**：**<font color="red">不能进行跨域交互</font>**<br />
+
+**但如果我们必须要跨域交互数据怎么办？**(除了Websocket和特殊方法)
+
+我们经常会在各种CDN调用js或css文件，或是图片用外链，这些都是跨域的调用。<br />
+其实在页面上调用带有`src`属性的文件时，都是可以跨域的。<br />
+**那么后台把需要交互的数据写到js文件里，然后前端用script标签调用不就可以交互数据了么**<br />
+`加载跨域js => 用回调函数传出存储在js中的数据`
+
+**<font color="red">需要注意的是: </font>**`script`标签改变`src`属性不会重新加载，所以需要用`dom操作`来实现jsonp
+<hr />
+
+##### 原生jsonp
+jsonp没有ajax那么多方法，所以其实不封装直接用也可以:
+
+```html
+<!--
+    以百度搜索接口为例
+    wd = keyword
+    cb = callbackName
+ -->
+<script src="http://suggestion.baidu.com/su?wd=js&cb=show"></script>
+<script>
+    function show(res) {
+        console.log(res);
+    }
+</script>
+<!--
+    用script标签发送请求 => 服务器生成相应js文件 => 本地加载js并执行接口中指定的回调函数
+    做出百度搜索推荐的效果，只要每次新生成一个script标签就可以了
+ -->
+```
+
+##### 原生jsonp封装
+```js
+/**
+ * @param json
+ * json.url  --  string         接口地址
+ * json.data --  json           post用的数据
+ * json.cbName  -- string       接口中用于获得回调函数名的参数
+ * json.success  --  function   成功的回调
+ */
+function jsonp(json) {
+    var json = json || {};
+    if (!json.url) {
+        console.log('url error');
+        return;
+    }
+    json.data = json.data || {};
+    json.cbName = '&' + json.cbName || '&cb';
+
+    var fnName = 'jsonb_' + Math.random();
+    fnName = fnName.replace('.', '');
+    window[fnName] = function(json2) {
+        json.success && json.success(json2);
+        //创建的script标签用完删除
+        oHead.removeChild(oS);
+    };
+    var oS = document.createElement('script');
+    json.data[json.cbName] = fnName;
+    var arr = [];
+    for (var name in json.data) {
+        arr.push(name + '=' + json.data[name]);
+    }
+
+
+    oS.src = json.url + '?' + arr.join('&');
+    var oHead = document.getElementsByTagName('head')[0];
+    oHead.appendChild(oS);
+}
+/**
+ * usage
+ *  以百度搜索的jsonp接口为例: http://suggestion.baidu.com/su?wd=
+ *  oT.value: 文本框的值
+ *  jsonp({
+ *      url: 'http://suggestion.baidu.com/su?wd=' + oT.value,
+ *      cbName: 'cb',
+ *      success: //....
+ *  });
+ */
+```
+
+##### jQuery的jsonp
+```js
+/**
+ * 还是以百度搜索接口为例: http://suggestion.baidu.com/su?wd=
+ * ajax.url  --  string             接口地址
+ * ajax.jsonp  -- string            接口中用于获得回调函数名的参数
+ * ajax.jsonpCallback  --  string   自定义回调函数名, 默认jq会产生一个随机的函数名
+ */
+$('input').keyup(() => {
+    $.ajax({
+        url:`http://suggestion.baidu.com/su?wd=${$('input').val()}`,
+        dataType:'jsonp',
+        jsonp:'cb',
+        success:r => {
+            //....
+        }
+    });
+});
+```
