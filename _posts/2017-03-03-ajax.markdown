@@ -19,7 +19,8 @@ AJAX(Asynchronous JavaScript and XML)是用来在不重新加载整个页面的�
 1. 建立`XHR(XMLHttpRequest)`对象(老版本IE是`ActiveXObject`);
 2. 打开连接，指定参数: `method, url, async`;
 3. 发送请求到服务器
-4. 监控ajax状态，根据`readystate`判断ajax是否完成，根据http状态码确定请求是否成功:
+4. 监控ajax状态，根据`readystate`判断ajax是否完成，
+<br />根据`http状态码(HTTP Status Code)`判断请求是否成功;
 
 ##### readystate
 
@@ -56,12 +57,12 @@ function json2url(json) {
 }
 /**
  * @param json
- * json.url:请求地址
- * json.data:提交数据、参数
- * json.time:超时时间
+ * json.url: 请求地址
+ * json.data: 提交数据、参数
+ * json.time: 超时时间
  * json.method: get / post
- * json.success:fn
- * json.error:fn
+ * json.success: fn
+ * json.error: fn
  */
 function ajax(json) {
     var json = json || {};
@@ -142,8 +143,9 @@ jsonp没有ajax那么多方法，所以其实不封装直接用也可以:
 ```html
 <!--
     以百度搜索接口为例
-    wd = keyword
-    cb = callbackName
+    wd: keyword
+    cb: callbackName
+    可以看出，cb也是作为json的一个属性传递的
  -->
 <script src="http://suggestion.baidu.com/su?wd=js&cb=show"></script>
 <script>
@@ -162,8 +164,8 @@ jsonp没有ajax那么多方法，所以其实不封装直接用也可以:
 /**
  * @param json
  * json.url  --  string         接口地址
- * json.data --  json           post用的数据
- * json.cbName  -- string       接口中用于获得回调函数名的参数
+ * json.data --  json           向接口发送的数据
+ * json.cbName  -- string       回调函数接口
  * json.success  --  function   成功的回调
  */
 function jsonp(json) {
@@ -173,7 +175,7 @@ function jsonp(json) {
         return;
     }
     json.data = json.data || {};
-    json.cbName = '&' + json.cbName || '&cb';
+    json.cbName = json.cbName || 'cb';
 
     var fnName = 'jsonb_' + Math.random();
     fnName = fnName.replace('.', '');
@@ -195,33 +197,44 @@ function jsonp(json) {
     oHead.appendChild(oS);
 }
 /**
- * usage
- *  以百度搜索的jsonp接口为例: http://suggestion.baidu.com/su?wd=
- *  oT.value: 文本框的值
- *  jsonp({
- *      url: 'http://suggestion.baidu.com/su?wd=' + oT.value,
- *      cbName: 'cb',
- *      success: //....
- *  });
+ * usage:
+ * 以百度搜索的jsonp接口为例: http://suggestion.baidu.com/su?wd=&cb=
+ * oT.value: 文本框的值
+ * jsonp({
+ *     url: 'http://suggestion.baidu.com/su,
+ *     cbName: 'cb',
+ *     data: { // data 直接写接口里用字符串拼接也可以
+ *         wd: oT.value
+ *         // cb: callBackName // 其实cb写这里也可以
+ *     }
+ *     success: //....
+ * });
  */
 ```
 
 ##### jQuery的jsonp
 ```js
 /**
- * 还是以百度搜索接口为例: http://suggestion.baidu.com/su?wd=
+ * 还是以百度搜索接口为例: http://suggestion.baidu.com/su?wd=&cb=
  * ajax.url  --  string             接口地址
- * ajax.jsonp  -- string            接口中用于获得回调函数名的参数
- * ajax.jsonpCallback  --  string   自定义回调函数名, 默认jq会产生一个随机的函数名
+ * ajax.data --  json               向接口发送的数据
+ * ajax.jsonp  -- string            回调函数接口
+ * ajax.jsonpCallback  --  string   回调函数名, 默认jq会产生一个随机的函数名
  */
 $('input').keyup(() => {
     $.ajax({
-        url:`http://suggestion.baidu.com/su?wd=${$('input').val()}`,
+        url:'http://suggestion.baidu.com/su',
         dataType:'jsonp',
         jsonp:'cb',
+        data: {
+            wd: $('input').val()
+        },
         success:r => {
             //....
         }
     });
 });
 ```
+<hr />
+
+贴个跨域接口黄页: <a href="https://www.juhe.cn/">接口聚合</a>

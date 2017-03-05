@@ -1,0 +1,57 @@
+---
+layout:     post
+title:      "解决fixed定位抖动"
+subtitle:   "fixed定位在webkit内核浏览器中会抽搐"
+date:       2017-03-04 15:56:00
+author:     "AllocatorXy"
+comments:   true
+catalog:    true
+header-img: "img/bg-fixed.gif"
+header-mask: 0.3
+tags:
+    - 前端开发
+    - CSS
+---
+<style type="text/css">
+    header.intro-header{
+        -webkit-background-size: 30%;
+        background-size: 30%;
+        background-color: #000;
+        background-repeat: repeat-x;
+    }
+</style>
+
+也不知道从哪个chrome版本开始，就会出现这样的问题，比如我博客右边这个悬浮目录，当它是`fixed`定位时，一旦在上面**触发改变样式**，就会**抖**一下，让人感觉非常地不爽，如果项目中出现了这样的情况，对用户体验是大幅度的降低，瞬间感觉low爆了;
+
+开始以为是应该找个东西在上面顶住它不让他飞上去，结果发现不是这个问题，它发抖是先向下再向上。<br />
+按理说scale不会改变原有布局，想着可能是布局问题，就把布局改了改发现还是会出现这个问题，甚至不改变其中元素的大小也会出现这个问题。
+
+最后是找了好久发现了解决方案：
+>1. 给抖动元素添加样式: `-webkit-transform: translateZ(0);` (**前缀不可以省略**)
+>2. 引入jq1.7.2: `<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>`
+>3. 加样式: `html, body {height:100%;overflow:auto;margin: 0;}`
+
+第二种和第三种方法虽然可以解决问题，但感觉副作用确实是大了些，第二种需要多引入个jq库，当然如果开发环境就用jq1.7.2，倒是不错的解决方案，但第三种对布局也许会有毁灭性打击啊。。<br />
+所以**首选**还是第一种方案。
+
+>测试一下效果：
+
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
+##### test
