@@ -13,10 +13,10 @@ baseurl: ""  # for example, '/blog' if your blog hosted on 'host/blog'
 # SNS settings
 RSS: false
 weibo_username:     AllocatorXy
-# zhihu_username:     huxpro
+# zhihu_username:
 github_username:    AllocatorXy
-#twitter_username:  huxpro
-# facebook_username:  huxpro
+#twitter_username:
+# facebook_username:
 # linkedin_username:  firstname-lastname-idxxxx
 
 
@@ -64,7 +64,7 @@ duoshuo_share: true                     # set to false if you want to use Commen
 
 # Google Analytics
 # ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-# ga_domain: huangxuan.me
+# ga_domain: 
 
 
 

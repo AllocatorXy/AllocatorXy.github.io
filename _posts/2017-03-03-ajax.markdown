@@ -218,14 +218,14 @@ function jsonp(json) {
  * 还是以百度搜索接口为例: http://suggestion.baidu.com/su?wd=&cb=
  * ajax.url  --  string             接口地址
  * ajax.data --  json               向接口发送的数据
- * ajax.jsonp  -- string            回调函数接口
+ * ajax.jsonp  -- string            回调函数接口, 默认callback
  * ajax.jsonpCallback  --  string   回调函数名, 默认jq会产生一个随机的函数名
  */
 $('input').keyup(() => {
     $.ajax({
         url:'http://suggestion.baidu.com/su',
         dataType:'jsonp',
-        jsonp:'cb',
+        jsonp:'cb',     // jq是在data之前在接口中插入cb
         data: {
             wd: $('input').val()
         },

@@ -20,12 +20,7 @@
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-overflow-scrolling:touch; /* smooth scroll */
   }
-/*  #btnToTop:focus,
-  #btnToTop:hover {
-    background-color: inherit;
-  }*/
   #btnToTop:active{
-    /*background-color: rgba(0, 0, 0, .25);*/
     -webkit-transform: scale(1.1, 1.1);
     -moz-transform: scale(1.1, 1.1);
     -ms-transform: scale(1.1, 1.1);
@@ -716,7 +711,9 @@ pre code {
 .post-preview:hover .post-content-preview,
 .post-preview:focus .post-content-preview,
 .post-preview:hover a,
-.post-preview:focus a {
+.post-preview:focus a,
+.post-preview a:focus,
+.post-preview a:focus .post-content-preview {
   text-decoration: none;
   color: #0085a1;
 }
@@ -910,12 +907,14 @@ form .row:first-child .floating-label-form-group {
 }
 .pager li > a {
   color: #404040;
+  transition: transform .1s, color .3s, background-color .3s, border-color .3s;
 }
 .pager li > a:hover,
 .pager li > a:focus {
   color: white;
   background-color: #0085a1;
   border: 1px solid #0085a1;
+  transform: scale(1.05, 1.05);
 }
 .pager li > a:hover > span,
 .pager li > a:focus > span {

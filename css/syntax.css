@@ -2,15 +2,25 @@
 /* from http://stackoverflow.com/a/23393920 */
 
 .highlight pre code * {
-  white-space: nowrap;    // this sets all children inside to nowrap
+  white-space: nowrap;    /* this sets all children inside to nowrap */
 }
 
 .highlight pre {
-  overflow-x: auto;       // this sets the scrolling in x
+  overflow-x: auto;       /* this sets the scrolling in x */
+}
+
+pre::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #ccc;
 }
 
 .highlight pre code {
-  white-space: pre;       // forces <code> to respect <pre> formatting
+  white-space: pre;       /* forces <code> to respect <pre> formatting */
 }
 
 
@@ -51,11 +61,11 @@
 .highlight .n { color: #333333; }
 .highlight .na { color: teal; }
 .highlight .nb { color: #0086b3; }
-.highlight .nc { color: #445588; font-weight: bold; }
+.highlight .nc { color: #445588; /*font-weight: bold;*/ }
 .highlight .no { color: teal; }
 .highlight .ni { color: purple; }
-.highlight .ne { color: #990000; font-weight: bold; }
-.highlight .nf { color: #990000; font-weight: bold; }
+.highlight .ne { color: #990000; /*font-weight: bold;*/ }
+.highlight .nf { color: #990000; /*font-weight: bold;*/ }
 .highlight .nn { color: #555555; }
 .highlight .nt { color: navy; }
 .highlight .nv { color: teal; }

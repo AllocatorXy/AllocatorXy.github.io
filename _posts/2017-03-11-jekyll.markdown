@@ -1,0 +1,171 @@
+---
+layout:     post
+title:      "做一个jekyll魔法师"
+subtitle:   "以前端的方式构建博客"
+date:       2017-03-11 05:20:00
+author:     "AllocatorXy"
+header-img: "img/post-bg-jekyll.jpg"
+header-mask: 0.2
+catalog:    true
+tags:
+    - 前端开发
+---
+
+### Why jekyll?
+一个优秀的博客系统，我认为是这样的:
+1. 可以专心写文章和发布而不去担心网站的维护;
+2. 易于定制和重构;
+
+若是构建一个带数据库的大型网站，显然不符合这两个要求，只用简书这种网站，不符合第二个要求。
+
+所以我选择<font color="red">jekyll</font>, 它可以完美实现我的要求，构建一个**<font style="color:rgb(101, 147, 74);">「舒服省心的博客」</font>**。
+<hr />
+
+### 准备工作
+GitHub Pages本就支持jekyll, 所以如果是在github上构建博客，我们可以不配置本地jekyll;<br />
+**<font size="20px">但</font>**，如果不构建本地jekyll环境，我们只能在github pages在线调试，这会产生非常多的垃圾commit, 而且这显然与我们的主旨**<font style="color:rgb(101, 147, 74);">「舒服省心的博客」</font>**背道而驰。<br />
+
+<span style="font-size: 30px">↓</span> 所以还是乖乖配置一个本地jekyll吧，磨刀不误砍柴工。
+
+##### Ruby & RubyGems
+我们常用的npm是什么？ --包管理工具<br />
+它是基于node的；<br />
+不过我们这次搞事情不用npm;<br />
+除了npm，还有一个比较常用的包管理工具，是基于`Ruby`的，它叫<font color="red">RubyGems</font>；<br />
+这次搞事情就依赖这个玩意了 => <a target="_blank" href="http://rubyinstaller.org/downloads/" style="font-size: 20px; font-weight: bold;">ruby Download</a><br />
+**<font style="color: red; font-size: 20px;">最好</font>**用Installer安装ruby
+
+<font style="font-size: 18px; font-weight: bold;">如果是Windows系统，是不能直接支持jekyll的，我们还需要搞一些东西:</font>
+1. 根据自己的系统下载Ruby DEVELOPMENT KIT => <a target="_blank" style="font-weight: bold;" href="http://rubyinstaller.org/downloads/">DevKit Download</a>
+2. 解压DevKit后，将命令行切换到解压的路径，输入初始化指令:
+```ruby
+ruby dk.rb init
+```
+然后我们还需要找到初始化路径中新生成的文件`config.yml`，在其中指定**ruby**的安装路径:
+```YAML
+# 例如我的ruby路径为: D:/Ruby23-x64
+---
+- D:/Ruby23-x64
+```
+3. 最后，在命令行输入指令安装DevKit:
+```ruby
+ruby dk.rb install
+```
+
+##### Jekyll
+jekyll是我们搭建博客的**核心**工具，本质上来讲，它是一个网页生成装置，可以将某些文件(markdown, textile, *)配合css和js等文件揉在一起转换成带有样式的静态网页，**并且它可以被运行在github上**，实际上，GitHub Pages就是用jekyll进行网页生成的。
+
+打开命令行，输入指令安装jekyll:
+
+    gem install jekyll
+<hr />
+
+### 搭建
+搭建jekyll博客，有两种方式开始:
+1. 从零开始组建网站；
+2. 采用别人的模板，自己进行二次开发和重构；
+
+##### 从零开始
+如果是采用别人的模板，直接down别人的整个文件夹，然后在里面自己再修改就好了，选择别人模板可以跳过这步；
+
+打开命令行，切换到自己想构建博客的目录，输入指令(**这里以建立文件夹aaa为例**):
+
+    jekyll new aaa
+
+八成是会报错的，因为有一些依赖包没有安装: 
+
+{% highlight ruby %}
+Dependency Error: Yikes! It looks like you dont have bundler or one of its de
+pendencies installed. In order to use Jekyll as currently configured, you'll nee
+d to install this gem. 
+{% endhighlight %}
+
+意思是我们有个依赖包没有安装，它叫bundler, 这时候我们输入：
+
+    gem install bundler
+
+可能不止有一个依赖包没有安装，反正缺哪个装哪个就是了，<br />
+直到我们可以成功运行指令`jekyll new aaa`
+
+这样就在我们命令行所在的目录初始化了一个aaa文件夹，里面存储的就是我们的博客了；<br />
+但这样的博客是最简陋的状态，里面只有一个小破页面，我们还需要搞很多东西<font size="9px">↓</font>
+
+##### 目录结构
+无论是否从零开始建站，我们需要了解一下一个jekyll博客的目录下每个文件都是干什么用的:
+
+```ruby
+# 对于一个博客来说，必须的文件我会在注释里加*
+.
+├── _config.yml     # => * jekyll配置文件，可自定义配置
+├── _includes/      # => * 存储模块化文件，使用liquid的语句调用
+├── _layouts/       # => * 存储布局模板，在文件头中选择该页模板, exp: layout: xxx
+├── _posts/         # => * 存储博客文章，格式像这样: 2017-03-11-title.markdown
+├── _draft/         # => 存储草稿文件，文件名可以不加日期
+├── _site/          # => * 存储jekyll转换后的网站本体
+├── about/
+|   └── index.html  # => http://example.com/about/ 也可以直接将这个命名为about.html放在根目录，但域名会有后缀名
+├── _data           # => 类似于数据库，可以用语句`site.data.members`调用其中文件
+|   └── members.yml
+├── contact/
+|   └── index.html  # => http://example.com/contact/
+└── index.html      # => * http://example.com/
+```
+
+其中，`_config.yml`是我们博客的全局设置，详见: <a target="_blank" href="http://jekyll.com.cn/docs/configuration/">配置</a><br />
+
+##### 本地预览
+我们需要建立一个服务器来预览我们的博客，以便调试，jekyll可以傻瓜式的为我们设置一个可用的服务器，将命令行移动到我们的博客根目录，然后输入命令：
+
+    jekyll serve
+
+这样就会有一个服务器启动，我们只需要访问本地域名就可以看到我们博客的效果，默认端口是4000，所以访问`localhost:4000`就好;<br />
+这只是jekyll指令的其中一种，jekyll有很多指令，**戳这里** => <a style="font-weight: bold;" target="_blank" href="http://jekyll.com.cn/docs/usage/">jekyll 命令</a>
+
+##### 上线
+如果是将博客放到github上，github会自动用jekyll生成我们的博客和文章，所以直接push过去就好了，如果需要更换域名，可以在博客根目录建一个文件`CNAME`，没有后缀名，在里面写上域名就好了，当然，需要先拥有一个域名。
+
+**如果是将博客托管到别的服务器，需要先在本地生成，再扔到服务器才可以。**
+<hr />
+
+### 折腾
+作为一个前端开发者，怎么可以对博客没有一颗折腾的心呢！<br />
+jekyll配合css和js, 随便你用什么，想怎么折腾怎么折腾。
+
+##### 代码高亮
+如果是github, 有两个默认引擎(pygments, rouge);<br />
+需要在`_config.yml`添加设置: `highlighter: rouge`或是`highlighter: pygments`, 然后下载css文件 => <a target="_blank" href="https://github.com/mojombo/tpw/blob/master/css/syntax.css">syntax.css</a>, 将css引入到我们的页面中，代码块就有五颜六色的渲染了；<br />
+
+这个css是github默认渲染样式，我们可以修改这个css来定制自己的高亮效果；<br />
+**对于不在github搭建的博客，需要手动配置高亮插件，详见: <a target="_blank" href="http://jekyll.com.cn/docs/plugins/">插件</a>**
+
+##### 模块化
+jekyll支持用liquid语言对博客进行模块化定制，liquid语言非常简单，如果熟悉AngularJS, 十分钟就学会用它了。<br />
+><a target="_blank" href="https://help.shopify.com/themes/liquid/basics">liquid官方文档</a><br />
+><a target="_blank" href="http://jekyll.com.cn/docs/templates/">jekyll中的liquid</a>
+
+例如，我们可以在`_config.yml`中添加设置项:
+
+```ruby
+aaa: i am aaa
+```
+
+然后在页面中引用它:
+<img src="/img/in-post/jekyll/liquid01.png" alt="" />
+<hr />
+
+### 更新博客
+这里以markdown为例，展示如何写文章并更新到博客中。
+如果我们是更新文章的话，需要将文章文件放到`_post`文件夹中，文件名格式一定要注意；<br />
+例如这篇文章的文件名就是`2017-03-11-jekyll.markdown`<br />
+jekyll会转换带有YAML文件头的文件，它包括一些关于转换的设置，其实YAML文件头就是内嵌一个`_config.yml`, 配置详见: <a target="_blank" href="http://jekyll.com.cn/docs/frontmatter/">YAML文档头</a><br />
+当文章要发表时，我们**只需要**将本地文件push到远程仓库就算发表成功了。
+
+对于这个博客，我们日常使用和维护只需要做**两件事**:
+1. 专心写文章，像简书一样简单明了;
+2. 折腾前端页面;
+
+至此，一个**<font style="color:rgb(101, 147, 74);">「舒服省心的博客」</font>**，完成。
+
+>官方文档<br />
+><a target="_blank" href="http://jekyll.com.cn/docs/home/">中文版</a><br />
+><a target="_blank" href="http://jekyllrb.com/docs/home/">原版</a>
