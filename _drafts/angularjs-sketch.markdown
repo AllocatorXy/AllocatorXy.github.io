@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "我的JS笔记"
-subtitle:   "我自己的js文档"
+title:      "谈谈AngularJS"
+subtitle:   "我的angular笔记"
 date:       2017-03-08 15:00:00
 author:     "AllocatorXy"
 header-img: "img/bg-angular.jpg"
@@ -22,10 +22,11 @@ angular用来扩展HTML, 弥补HTML在构建应用方面的不足，它以**Mode
 
 1. 处理前台数据逻辑，结构清晰，代码简练；
 2. 有利于将页面拆分成低耦合，高内聚并且重用性强的模块；
-3. 开发者可以尽量不用原生DOM操作；
+3. 摒弃原生DOM操作；
 
 适合做SPA，用一张网页动态实现所有功能而不跳转或刷新；
 ##### 局限
-1. 
+1. 框架比较封闭，与其他框架/库兼容性很差；
+2. 
 
 ##### 脏检查(Dirty Checking)
