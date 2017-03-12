@@ -209,7 +209,8 @@
 }
 .side-catalog .catalog-body .active a {
   color: #0085a1!important;
-  transform: scale(1.05, 1.05);
+  transition-duration: .3s;
+  transform: scale(1.1, 1.1);
 }
 @media (max-width: 1200px) {
   .side-catalog {
@@ -260,7 +261,7 @@ h4 {
 }
 a {
   color: #404040;
-  transition-duration: .3s;
+  transition-duration: .5s;
 }
 a:hover,
 a:focus {
@@ -971,6 +972,7 @@ img::-moz-selection {
   border-color: white;
   background-color: rgba(255, 255, 255, 0.4);
   text-decoration: none;
+  transition: color .5s, font .5s, border .5s, transform .2s, background .2s;
   transform: scale(1.05, 1.05);
 }
 @media only screen and (min-width: 768px) {
