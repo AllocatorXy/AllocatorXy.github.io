@@ -5,7 +5,7 @@ subtitle:   "如何用animate做出好使的hover标签"
 date:       2017-02-20 20:24:00
 author:     "AllocatorXy"
 comments:   true
-header-img: "img/js-logo.png"
+header-img: "img/post-bg-jq.jpg"
 header-mask: 0.3
 tags:
     - 前端开发
