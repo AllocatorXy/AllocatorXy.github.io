@@ -32,7 +32,7 @@ angular中有一个`$digest`方法，它的作用就是检查数据改变，如�
    * @param  {fn}      listener              // 改变时的回调函数
    * @param  {boolean} objectEquality        // 比较变量的方式
    * @param  {exp}     prettyPrintExpression // trim后的表达式
-   * @return {fn}      deregisterWatch       // 用于销毁watcher的函数
+   * @return {fn}      deregisterWatch       // 用于销毁watcher的闭包
    */
   $watch: function(watchExp, listener, objectEquality, prettyPrintExpression) {
     var get = $parse(watchExp); // 将表达式转换为域内函数用来获取当前值
@@ -66,7 +66,7 @@ angular中有一个`$digest`方法，它的作用就是检查数据改变，如�
     array.$$digestWatchIndex++;
     incrementWatchersCount(this, 1);
 
-    return function deregisterWatch() { // 返回函数，用于销毁watcher
+    return function deregisterWatch() { // 返回闭包，用于销毁watcher
       var index = arrayRemove(array, watcher);
       if (index >= 0) {
         incrementWatchersCount(scope, -1);
@@ -88,7 +88,7 @@ angular中有一个`$digest`方法，它的作用就是检查数据改变，如�
  * 这是源码注释中的栗子，手动添加watcher
  * @param  {exp} watchExp        // 要监控的变量
  * @param  {fn}  listener        // 回调函数
- * @return {fn}  deregisterWatch // 用于销毁watcher的函数
+ * @return {fn}  deregisterWatch // 用于销毁watcher的闭包
  */
 scope.$watch(
   // This function returns the value being watched. It is called for each turn of the $digest loop

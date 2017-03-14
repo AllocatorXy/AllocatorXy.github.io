@@ -1196,3 +1196,10 @@ img::-moz-selection {
 .page-fullscreen footer .copyright a:hover {
   color: #ddd;
 }
+@font-face {
+    font-family: 'monaco';
+    src: url('fonts/Monaco.eot');
+    src: local('☺'), url('../fonts/Monaco.woff') format('woff'), url('../fonts/Monaco.ttf') format('truetype'), url('../fonts/Monaco.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
