@@ -177,7 +177,7 @@
 
 <!--fastclick.min.js -->
 <script>
-    async('/js/fastclick.min.js', function() {
+    async('{{ "/js/fastclick.min.js" | prepend: site.baseurl }}', function() {
         var $btnT = document.querySelector('#btnToTop'),
              $nav = document.querySelector('nav');
         FastClick.attach($btnT);

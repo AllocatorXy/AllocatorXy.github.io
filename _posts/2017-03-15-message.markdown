@@ -1,0 +1,91 @@
+---
+layout:     post
+title:      "详解异步JavaScript"
+subtitle:   "js的消息机制和队列"
+date:       2017-03-15 04:28:00
+author:     "AllocatorXy"
+header-img: "img/bg-data0101.jpg"
+header-mask: 0.3
+tags:
+    - 前端开发
+    - JavaScript
+---
+
+### 单线程的JavaScript
+
+##### 什么是单线程？
+**<a target="_blank" href="https://zh.wikipedia.org/wiki/线程">线程(thread)</a>**，是程序得以运行的基本单位，它被包含在进程当中，一个线程在同一时刻只能处理一个任务，所以单线程的程序，是不能异步处理任务的。
+
+##### 为什么js是单线程的？
+js在浏览器中，一般是处理前端UI操作的，如果让它在浏览器中可以多线程并发，也许会出现多个同时出现的线程操作同一个样式的情况，这就与js的初衷不符了，所以在浏览器中，是不能让js有多个线程的。(html5 Web-Worker可以让js拥有多线程，但页面上还是以主线程为主)
+<hr />
+
+### 异步JavaScript
+因为js的单线程特性，所以js的线程是可以被很轻易阻塞的:
+
+```js
+while (true) {
+    console.log('obj');
+}
+alert('end'); // 永远都不会被执行
+```
+
+显然这给**用户体验**带来了很大的问题，如果出现了等待时间很长的任务(比如等待AJAX请求)，或是大量任务排队，页面是会没有响应的。<br />
+于是异步JavaScript就应运而生了。
+
+#### 事件驱动(Event-Driven)
+要理解异步js，首先需要了解一下**<a href="https://zh.wikipedia.org/zh-cn/%E4%BA%8B%E4%BB%B6%E9%A9%85%E5%8B%95%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88">事件驱动模型</a>**:
+- 主线程正在执行任务形成一个栈，这个**执行栈**里存储正在执行的任务；
+- 一个线程拥有一个**消息队列**，消息队列中**存储某些暂时挂起的任务**；
+- 仅当线程的执行栈**空闲**且满足某些条件时，消息队列中的事件会被依次执行(消息队列是先进先出结构)；
+
+##### 事件循环(Event-Loop)
+因为js的使命问题，要保持单线程特性，所以实现异步js, 就只能靠事件驱动模型了；<br />
+虽然js是单线程的，但外部环境可以不是单线程的，比如在浏览器环境下，浏览器可以为HTTP请求、图片加载、鼠标点击事件、定时器等任务开启单独的线程来实现。<br />
+
+将js的事件分为两种:
+1. 同步事件，它们被直接加入执行栈中并完整执行；<br />
+2. 异步事件，它们被加入执行栈中，第一步运行通过调用某些外部环境(比如浏览器)的接口来发送请求，并将回调函数放到消息队列中，一旦回调函数满足要求，且执行栈空闲，则回调函数被放入执行栈中运行，整个异步操作完成，这一系列操作是不断循环的，所以被称为**事件循环(Event-Loop)**;
+<img src="/img/in-post/event/event-loop.png" alt="" />
+这幅图中，描绘了js与浏览器之间的Event-Loop, 当js运行时，通过运行栈运行同步事件和发送异步请求，并将回调函数放入**消息队列(这里是callback queue)**, 当同步事件执行完毕，执行栈空闲，就会依次执行异步事件对应的回调函数。
+
+异步JavaScript的原理也就是这样了，其实就一句话：疯狂发同步消息，依靠外部api和回调函数实现异步。
+<hr />
+
+### hacks
+##### 定时器
+```js
+for (let i = 0; i < 66666; i++) {
+    setTimeout(() => console.log(1), 0);
+    console.log(2);
+}
+```
+
+上面栗子中，显然执行时间会比较长，但浏览器会先连续输出66666个2，等到2全部输出完毕后，才会再连续输出66666个1, 虽然定时器设定的时间是0ms；<br />
+这样的结果，用常理去理解它就会觉得非常诡异了，其实这就是利用了消息机制。
+1. 发送一个定时器信息到浏览器，然后把回调函数放到js消息队列；
+2. 浏览器计时，到时间了触发定时器，告诉消息队列中的回调函数可以用了；
+3. 但是js运行栈中需要做的事情实在是太多了，一时半会做不完，消息队列里的回调函数也只能等着了；
+4. 运行栈中干净了，回调函数依次触发；
+
+利用定时器，虽然把时间调成0, 但可以通过这玩意来**调整代码执行顺序**，能解决某些实际问题。
+
+##### 异步加载
+某些标签比如script, 默认在html中是同步加载的，也就是说加载一个，运行完了才能继续加载DOM, 这是非常影响网页加载速度的, 我们可以通过一个小玩意实现异步加载；<br />
+DOM操作其实也是浏览器的异步接口，所以我们只需要用DOM操作来加载标签就可以异步加载了:
+
+```js
+function async(u, c) {
+    const t = 'script',
+    [ o, s ] = [ document.createElement(t), document.getElementsByTagName(t)[0] ];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+}
+```
+<hr />
+
+>参考资料: <br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html">JavaScript 运行机制详解：再谈Event Loop</a><br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="https://vimeo.com/96425312">Philip Roberts: Help, I’m stuck in an event-loop.</a><br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://greengerong.com/blog/2015/10/22/promisede-miao-yong/">Promise的前世今生和妙用技巧</a>

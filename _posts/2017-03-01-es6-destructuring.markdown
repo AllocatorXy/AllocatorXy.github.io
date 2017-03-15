@@ -63,8 +63,8 @@ move({ x: 3 });       // [3, 0]
 move({});             // [0, 0]
 move();               // [0, 0]
 
-// (1). { x, y } = arg;            // 首先实参解构赋值给形参
-// (2). { x, y } = { x: 0, y: 0 }; // 然后{ x: 0, y: 0 }解构赋值给(1)加工过的参数
+// (1). { x, y } = arg; // 首先实参解构赋值给形参
+// (2). 然后{ x: 0, y: 0 }解构赋值给(1)加工过的参数，但模式匹配失败，所以空值会变成undefined不完全解构
 function move({ x, y } = { x: 0, y: 0 }) {
   return [ x, y ];
 }
@@ -193,6 +193,6 @@ for (const [,value] of map) {
 }
 ```
 
-=> => => => etc...
+etc...
 <hr />
 参考文献: <a href="https://github.com/lukehoban/es6features">es6features</a>, <a href="http://es6.ruanyifeng.com/">ECMAScript 6 入门</a>
