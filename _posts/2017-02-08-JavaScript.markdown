@@ -23,6 +23,57 @@ tags:
     + 每次换行行末加\
     + ES6 模板字符串
 
+#### 正则表达式
+实际就是词法分析器匹配字符。
+
+##### 常用匹配
+```js
+/\d/ // 数字
+/\w/ // 字母/数字/下划线
+/\b/ // 单词边界
+/\s/ // 空白
+
+/a*/ // 闭包，0-n个a
+/a+/ // 非零闭包，1-n个a
+/a?/ // 0或1个a
+/a{n}/   // n个a
+/a{n,m}/ // n-m个a
+/a{n,}/  // 最少n个
+
+/a|b/      // a或b
+/a[qwe]c/  // aqc/awc/aec
+/[a-z]/    // a,b,c,...z
+/[a-zA-Z]/ // a-z或A-Z
+/[12-49]/  // 1或2-4或9 (1, 2, 3, 4, 9)
+/a[^ab]c/  // a后字母非a或b,然后c
+```
+
+##### 参数
+```js
+// 这里面i和g就是参数，用来调整匹配选项
+// 常用的: i(忽略大小写ignore) g(全局global) m(多行multi-line) u(unicode)
+var exp = new RegExp('A', 'ig');
+const exp1 = new RegExp(/\d/ig, 'i') // es5报错 es6中ig会被i覆盖
+```
+
+##### 正则常用方法
+```js
+str.search(expr|str); // 找到了返回位置，找不到返回-1，类似indexOf
+str.match(expr|str); // 找到了返回结果数组，找不到返回null
+str.split(expr|str); // 切数组
+
+str.replace(expr|str, str|fn);
+str.replace(expr|str, function(s) {
+        // s: 每次匹配到的东西
+        // return 要替换成xx
+    });
+
+str.startsWith('abc'); // 用正则代替: /^abc/
+str.endWith('abc');    // 用正则代替: /abc$/
+
+reg.test(str) // 需要在reg前后加^和$才能用，测试能不能匹配到，返回Boolean
+```
+
 #### string操作
 
 ```javascript
@@ -44,6 +95,7 @@ str.split(',');       // [1,2,3,4,5,6], 可以用正则匹配
 
 obj.toString(); // 强制转换为字符串
 ```
+
 
 ##### userAgent
 >获取浏览器UA会得到一大坨东西，用来识别浏览器不好使，这时候就要用到indexOf了
@@ -656,12 +708,246 @@ oUl.onclick = function(ev) { // 添加点击事件给父级
 ```
 <hr />
 
-### this指针
-方法属于谁，this指向谁
-this的**错误**用法:
-
-1. 定时器中不能使用this;
-2. 事件中套了一层函数;
-3. 行间事件套了一层;
-4. attachEvent中不能使用this;
+### 转码
+```js
+/* 不含特殊字符 */
+encodeURI(str);
+decodeURI(str);
+/* 含特殊字符 */
+encodeURIComponent(str);
+decodeURIComponent(str);
+```
 <hr />
+
+### 固定this指针
+```js
+// 调用fn, 使this指向obj, 一般用作固定this到某个函数
+fn.call(obj,arg1,arg2...);
+fn.apply(obj,[arg1,arg2...]);
+
+// 使用箭头函数，this指向父级
+function aaa() {
+    () => {
+        console.log(this); // function aaa
+    }
+}
+```
+<hr />
+
+### 多态
+```js
+/*多态的基本概念：一个引用类型（变量）在不同情况下的多种状态。
+     js本身是无态的，天生就支持多态。*/
+//Master类
+function Master(name) {
+    this.name = name;
+    //方法[给动物喂食物]
+}
+//原型法添加成员函数
+Master.prototype.feed = function(animal, food) {
+    window.alert('给' + animal.name + '喂' + food.name);
+};
+    //动物类
+function Animal(name) {
+    this.name = name;
+}
+//猫猫
+function Cat(name) {
+    this.animal = Animal;
+    this.animal(name);
+}
+//狗狗
+function Dog(name) {
+    this.animal = Animal;
+    this.animal(name);
+}
+//食物类
+function Food(name) {
+    this.name = name;
+}
+//鱼
+function Fish(name) {
+    this.food = Food;
+    this.food(name);
+}
+//骨头
+function Bone(name) {
+    this.food = Food;
+    this.food(name);
+}
+var cat = new Cat('大花猫');
+var fish = new Fish('黄花鱼');
+var dog = new Dog('大花狗');
+var bone = new Bone('猪骨头');
+//创建一个主人
+var master = new Master();
+master.feed(cat, fish);
+master.feed(dog, bone);
+```
+<hr />
+
+### 本地存储
+
+#### cookie
+- cookie一般存在网站根目录，因为**父级目录无法读取子级目录的cookie**;
+- Expires/Max - Age: cookie有效期，默认值为session;
+- cookie**不能存中文**，如果要存中文转成utf8;
+- 数据类型均为string, 用JSON.parse()需要将JSON键加**双引号**;
+- **删除cookie**时，将有效期调成负值;
+- cookie最大容量为4kb;
+
+```js
+/**
+ * date: 2017-03-21 15:49:34
+ * author: AllocatorXy
+ * description: 原生cookie方法
+ */
+function setCookie(name, value, json) {
+    let str = name + '=' + value;
+    if (json) {
+        for (const k in json) {
+            switch (k) {
+                case 'expires': {
+                    if (Number(json[k])) {
+                        const oDate = new Date();
+                        oDate.setDate(oDate.getUTCDate() + json[k]);
+                        str += ';expires=' + oDate.toUTCString();
+                    } else {
+                        str += ';expires=' + json[k];
+                    }
+                    break;
+                }
+                default:
+                    str += `;${k}=${json[k]}`;
+                    break;
+            }
+        }
+    }
+    document.cookie = str;
+}
+
+function getCookie(name) {
+    const arr = document.cookie.split('; ');
+    for (let i = 0; i < arr.length; i++) {
+        const arr2 = arr[i].split('=');
+        if (name == arr2[0]) {
+            return arr2[1];
+        }
+    }
+    return ''; // 不存在的情况
+}
+
+function getCookieAll() {
+    const arr = document.cookie.split('; ');
+    const res = {};
+    for (let i = 0; i < arr.length; i++) {
+        const arr2 = arr[i].split('=');
+        res[`${arr2[0]}`] = arr2[1];
+    }
+    return res;
+}
+
+function removeCookie(name) {
+    setCookie(name, '', -2);
+}
+```
+
+#### storage
+h5提供了一个新的本地存储解决方案: localStorage和sessionStorage;
+
+- 最大容量为5M;
+- 数据类型依然是字符串;
+- 不能被爬虫抓取;
+- 存储东西太多会影响网页性能;
+- 以key和value键值对组成;
+
+```js
+/* localStorage和sessionStorage用法完全一样，只是有效期不一样 */
+const ls = window.localStorage;
+/* 设定一个值 */
+ls.a = 'abc';
+ls['b'] = '1234';
+ls.setItem('c',89);
+
+/* 获取一个值 */
+alert(ls.a);
+alert(ls['b']);
+alert(ls.getItem('c'));
+
+/* 删除 */
+ls.removeItem('c'); // 删除一个
+ls.clear();         // 清空
+
+/* key */
+ls.key(i);             // 按索引取出某个键
+ls.getItem(ls.key(i)); // 按索引取出某个键的值
+```
+
+##### onstorage
+这个事件监控storage改变，当它改变时触发；
+<hr />
+
+### 自定义属性
+正常情况下除了低版本ie, 不能获取直接添加在标签中的自定义属性，有一些特殊方法；
+
+##### get/setAttribute
+```js
+obj.getAttribute('abc') // 获取obj的abc属性，返回的数据类型是string
+obj.setAttribute('abc', 111) // 为obj设置abc属性
+var a = obj.attributes; // 返回obj的属性集合NamedNodeMap
+```
+
+##### dataset
+h5中新增了一种自定义属性对象，它在h5页面中这样呈现：
+
+```html
+<div data-aaa="111"></div>
+```
+
+`dataset`不是传统的js对象，而是DOMStringMap对象，在js中这样操作：
+
+```js
+const a = obj.dataset; // 获取obj的所有以'data-'为前缀的属性
+const b = obj.dataset.aaa; // 获取obj的'data-aaa'属性
+const c = obj.dataset.aaBb // 获取obj的'data-aa-bb'属性，类似于angularJS
+obj.dataset.aaBbCc = 1; // 设置obj的'aa-bb-cc'属性为1
+```
+
+**需要注意的是，dataset的性能远低于attribute, 慎用!**
+
+##### 遍历属性
+元素的属性集合是可以被遍历的，但要尽量避免直接遍历：
+
+```js
+for (let k in obj) {
+    console.log(k); // obj的所有属性全都被打印出来了，很恶心
+}
+```
+
+这时候用dataset就很舒服：
+
+```js
+for (let v in obj.dataset) {
+    console.log(v + '=' + obj.dataset[v]); // 这样只会打印'data-*'属性
+}
+```
+
+##### classList
+h5中提供了一种新的操作class的方法：
+
+```js
+let c = obj.classList; // 返回DOMTokenList, 即obj的class集合
+let d = obj.classList.value; // 标签的class值 形如：'class1 class2 class3'
+```
+
+另外针对classList还有几种新的方法：
+
+```js
+obj.classList.add('active', 'a'); // 为obj添加类
+obj.classList.remove('active');   // 为obj移除类
+obj.classList.contains('active'); // 返回Boolean, 用于检测是否有某个类名
+obj.classList.item(n); // 返回索引值为n的类名，若参数错误则返回第一个类名，但参数不能为空
+
+/* 类似于jq的toggleClass, 若不存在类名返回true并为之添加类, 第二个参数可以不填 */
+obj.classList.toggle('active', true|false); 
+```

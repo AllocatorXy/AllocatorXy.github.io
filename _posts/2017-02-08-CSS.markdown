@@ -50,11 +50,67 @@ a.red:visited {color: #FF0000}
 <a class="red" href="css_syntax.asp">CSS Syntax</a>
 ```
 
-#### CSS:after 选择器
-- :after 选择器在被选元素的内容后面插入内容。
-- 请使用 content 属性来指定要插入的内容。
-`selector:after{content:"插入的内容"}`
-#### 伪类选择器nth-child系列
+#### 其他伪类选择器
+```css
+input:checked {
+    /* 选择checked状态的选择框 */
+}
+input:disabled {
+    /* 选择被禁止的元素 */
+}
+input:enabled {
+    /* 选择可用的元素 */
+}
+div[value=ccc] {
+    /* 选择属性value为ccc的项 */
+}
+div[type] {
+    /* 选择有type属性的项 */
+}
+div[abc],[d]{
+    /* 选择带有abc或d属性的元素 */
+}
+div[title^=apple]{ /* 正则匹配属性 */
+    /* 选择属性为title中，属性以apple开头的元素 */   
+}
+div[title*=apple]{ /* 同样是正则 */
+    /* 选择属性为title重，属性内容含有apple的元素 */
+}
+::selection {
+    /* 选择被选中的dom元素 */
+}
+p::selection {
+    /* 选择被选中的p元素 */
+}
+p:first-letter {
+    /* 选择第一个字 */
+}
+p:first-line {
+    /* 选择第一行 */
+}
+h1:not(.red) {
+    /* 选择不是.red类的h1 */
+}
+#box~p {
+    /* 选择#box之后所有同级的p */
+}
+div:target {
+    /* 选择被锚点跳转的div */
+}
+li:empty {
+    /* 选择内容为空的标签 */
+}
+body *:nth-of-type(1){
+    /* 选择body下所有第n次出现的元素 */
+}
+div:nth-child(2n) {
+    /* 选择偶数次序的div */
+}
+div:nth-child(even){
+    /* 同上 */
+}
+
+```
 
 ### 下划线
 - 取消下划线
