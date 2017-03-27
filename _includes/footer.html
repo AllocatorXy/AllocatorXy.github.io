@@ -179,7 +179,7 @@
 <script>
     async('{{ "/js/fastclick.min.js" | prepend: site.baseurl }}', function() {
         var $btnT = document.querySelector('#btnToTop'),
-             $nav = document.querySelector('nav');
+             $nav = document.querySelector('.navbar');
         FastClick.attach($btnT);
         $nav && FastClick.attach($nav);
     });
@@ -188,7 +188,6 @@
 <!-- Google Analytics -->
 {% if site.ga_track_id %}
 <script>
-    // dynamic User by Hux
     var _gaId = '{{ site.ga_track_id }}';
     var _gaDomain = '{{ site.ga_domain }}';
 
@@ -206,7 +205,6 @@
 <!-- Baidu Tongji -->
 {% if site.ba_track_id %}
 <script>
-    // dynamic User by Hux
     var _baId = '{{ site.ba_track_id }}';
 
     // Originial
@@ -249,7 +247,6 @@
 
     /*
      * Doc: https://github.com/davist11/jQuery-One-Page-Nav
-     * Fork by Hux to support padding
      */
     async("{{ '/js/jquery.nav.js' | prepend: site.baseurl }}", function () {
         $('.catalog-body').onePageNav({
