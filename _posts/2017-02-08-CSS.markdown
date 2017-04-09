@@ -70,11 +70,11 @@ div[type] {
 div[abc],[d]{
     /* 选择带有abc或d属性的元素 */
 }
-div[title^=apple]{ /* 正则匹配属性 */
+div[title^='apple']{ /* 正则匹配属性 */
     /* 选择属性为title中，属性以apple开头的元素 */   
 }
-div[title*=apple]{ /* 同样是正则 */
-    /* 选择属性为title重，属性内容含有apple的元素 */
+div[title*='apple']{ /* 同样是正则 */
+    /* 选择属性为title中，属性内容含有apple的元素 */
 }
 ::selection {
     /* 选择被选中的dom元素 */

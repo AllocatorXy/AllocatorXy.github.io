@@ -951,3 +951,47 @@ obj.classList.item(n); // 返回索引值为n的类名，若参数错误则返�
 /* 类似于jq的toggleClass, 若不存在类名返回true并为之添加类, 第二个参数可以不填 */
 obj.classList.toggle('active', true|false); 
 ```
+<hr />
+
+### 文件操作
+
+##### 文件拖拽
+```js
+oBox.ondragenter // 拖动文件进入oBox
+oBox.ondragleave // 拖动文件离开oBox
+oBox.ondragover  // 拖动文件悬停在oBox
+oBox.ondrop      // 在oBox释放拖动的文件
+///////////////////////////////////////
+// oBox中drop事件触发必须阻止oBox中的dragover事件 //
+///////////////////////////////////////
+```
+
+##### 文件获取/读取
+**文件读取只能读取拖拽、文件上传input[type=file]获取到的文件;**
+
+```html
+<!-- 读取多个文件 -->
+<input type="file" multiple>
+```
+
+```js
+oBox.ondrop = ev => {
+    // 拿到文件
+    const oFile = ev.dataTransfer.files[0];
+    // 读取文件基本信息
+    // alert(oFile.name);
+    // alert(oFile.size);
+    // alert(oFile.type);
+    // alert(oFile.lastModifiedDate);
+    const reader = new FileReader();
+    // reader.readAsText(oFile); // 以文本方式读取
+    reader.readAsDataURL(oFile); // 以base64方式读取
+
+    reader.onload = () => { //文件读取完毕后
+        alert(reader.result); //文件读取结果
+    };
+
+    return false; // 这里不组织默认事件会被浏览器打开文件
+};
+```
+
