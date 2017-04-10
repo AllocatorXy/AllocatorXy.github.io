@@ -88,9 +88,9 @@ service-worker: true
 
 
 # Friends
-friends: [
-    {
-        title: "AllocatorXy",
-        href: "https://xiy.red/"
-    }
-]
+# friends: [
+#     {
+#         title: "AllocatorXy",
+#         href: "https://xiy.red/"
+#     }
+# ]

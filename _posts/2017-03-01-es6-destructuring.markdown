@@ -24,7 +24,7 @@ tags:
 
 ```js
 // 数组的模式匹配，可以跳过，但必须按照顺序匹配
-let [a, , b] = [ 1, 2, 3 ]; // a = 1, b = 2
+let [ a, , b ] = [ 1, 2, 3 ]; // a = 1, b = 2
 
 // 对象的解构赋值，可以不按顺序匹配
 function today() { return { d: 1, m: 3, y: 2017 }; }
@@ -34,8 +34,8 @@ let { m: month, y: year, d: day } = today(); // month = 3, year = 2017, day = 1
 let { m, y, d } = today(); // m = 3, y = 2017, d = 1
 
 // 可以有不完全匹配，不完全解构并赋值
-let [x, y] = [1, 2, 3]; // x = 1, y = 2
-let [a, [b], d] = [1, [2, 3], 4]; // a = 1, b = 2, d = 4
+let [ x, y ] = [1, 2, 3]; // x = 1, y = 2
+let [ a, [ b ], d ] = [1, [2, 3], 4]; // a = 1, b = 2, d = 4
 
 /* 但左右结构不可以不匹配 */
 let [ a, { b } ] = [ 1 ]; // error
@@ -48,10 +48,10 @@ let [ a, { b } ] = [ 1, { 2 } ]; // a = 1, b = 2
 因为在传入实参时，实际上是对形参的赋值，所以也可以将解构用作参数：
 
 ```js
-function g({name: x}) {
+function g({ name: x }) {
   console.log(x);
 }
-g({name: 5}); // 5
+g({ name: 5 }); // 5
 
 // (1). { x = 0, y = 0 } = arg; // 首先实参解构赋值给形参
 // (2). { x, y } = {};          // 然后{}解构赋值给(1)加工过的参数
@@ -69,8 +69,8 @@ function move({ x, y } = { x: 0, y: 0 }) {
   return [ x, y ];
 }
 
-move({x: 3, y: 8}); // [3, 8]
-move({x: 3});       // [3, undefined]
+move({ x: 3, y: 8 }); // [3, 8]
+move({ x: 3 });       // [3, undefined]
 move({});           // [undefined, undefined]
 move();             // [0, 0]
 ```
@@ -116,12 +116,12 @@ let { a } = true; // a === undefined
 
 ```js
 // 默认值生效
-let [foo = true] = [];               // foo = true
-let [x, y = 'b'] = ['a', ];          // x = 'a', y = 'b'
-let [x, y = 'b'] = ['a', undefined]; // x = 'a', y = 'b'
+let [ foo = true ] = [];               // foo = true
+let [ x, y = 'b' ] = [ 'a', ];          // x = 'a', y = 'b'
+let [ x, y = 'b' ] = [ 'a', undefined ]; // x = 'a', y = 'b'
 
 // 默认值不生效
-let [x = 1] = [null];   // x = null
+let [ x = 1 ] = [ null ];   // x = null
 ```
 <hr />
 
@@ -146,9 +146,9 @@ let { length : x } = 'qwe'; // x = 3
 **只有非声明语句，且括号不罩pattern才能用：**
 
 ```js
-[(b)] = [3];
+[ (b) ] = [ 3 ];
 ({ p: (d) } = {});
-[(parseInt.prop)] = [3];
+[ (parseInt.prop) ] = [ 3 ];
 ```
 <hr />
 
@@ -160,7 +160,7 @@ let { length : x } = 'qwe'; // x = 3
 let x = 1;
 let y = 2;
 
-[x, y] = [y, x];
+[ x, y ] = [ y, x ];
 ```
 
 >取出多个json值：
@@ -169,7 +169,7 @@ let y = 2;
 let jsonData = {
   id: 42,
   status: "OK",
-  data: [867, 5309]
+  data: [ 867, 5309 ]
 };
 
 let { id, status, data: number } = jsonData;
@@ -183,12 +183,12 @@ var map = new Map();
 map.set('first', 'hello');
 map.set('second', 'world');
 
-for (const [key, value] of map) {
+for (const [ key, value ] of map) {
   console.log(key + " is " + value);
 }
 
 // 单独获取键值
-for (const [,value] of map) {
+for (const [ ,value ] of map) {
   // ...
 }
 ```
