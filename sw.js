@@ -2,8 +2,8 @@ const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
 const HOSTNAME_WHITELIST = [
   self.location.hostname,
-  "cdnjs.cloudflare.com",
-  "xiy.red"
+  'cdnjs.cloudflare.com',
+  'xiy.red'
 ];
 
 
@@ -16,7 +16,7 @@ const getFixedUrl = (req) => {
   // Just keep syncing with location.protocol
   // fetch(httpURL) belongs to active mixed content.
   // And fetch(httpRequest) is not supported yet.
-  url.protocol = self.location.protocol
+  url.protocol = self.location.protocol;
 
   // 2. add query for caching-busting.
   // Github Pages served with Cache-Control: max-age=600
@@ -25,13 +25,13 @@ const getFixedUrl = (req) => {
   // Cache-Control-Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=453190
   url.search += (url.search ? '&' : '?') + 'cache-bust=' + now;
   return url.href;
-}
+};
 
 // The Util Function to detect and polyfill req.mode="navigate"
 // request.mode of 'navigate' is unfortunately not supported in Chrome
 // versions older than 49, so we need to include a less precise fallback,
 // which checks for a GET request with an Accept: text/html header.
-const isNavigationReq = (req) => (req.mode === 'navigate' || (req.method === 'GET' && req.headers.get('accept').includes('text/html')))
+const isNavigationReq = (req) => (req.mode === 'navigate' || (req.method === 'GET' && req.headers.get('accept').includes('text/html')));
 
 // The Util Function to detect if a req is end with extension
 // Accordin to Fetch API spec <https://fetch.spec.whatwg.org/#concept-request-destination>
@@ -47,15 +47,14 @@ const endWithExtension = (req) => Boolean(new URL(req.url).pathname.match(/\.\w+
 //    .ext?blah -> !(sw 302 -> .ext/?blah -> gh 404) -> .ext?blah
 // If It's a navigation req and it's url.pathname isn't end with '/' or '.ext'
 // it should be a dir/repo request and need to be fixed (a.k.a be redirected)
-// Tracking https://twitter.com/Huxpro/status/798816417097224193
-const shouldRedirect = (req) => (isNavigationReq(req) && new URL(req.url).pathname.substr(-1) !== "/" && !endWithExtension(req))
+const shouldRedirect = (req) => (isNavigationReq(req) && new URL(req.url).pathname.substr(-1) !== "/" && !endWithExtension(req));
 
 // The Util Function to get redirect URL
 // `${url}/` would mis-add "/" in the end of query, so we use URL object.
 // P.P.S. Always trust url.pathname instead of the whole url string.
 const getRedirectUrl = (req) => {
   url = new URL(req.url);
-  url.pathname += "/";
+  url.pathname += '/';
   return url.href;
 };
 
@@ -69,11 +68,11 @@ const getRedirectUrl = (req) => {
  */
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(PRECACHE).then(cache => {
-      return cache.add('offline.html')
+    caches.open(PRECACHE).then(cache => cache
+      .add('offline.html')
       .then(self.skipWaiting())
-      .catch(err => console.log(err));
-    })
+      .catch(err => console.log(err))
+    )
   );
 });
 
@@ -106,8 +105,8 @@ self.addEventListener('fetch', event => {
   if (HOSTNAME_WHITELIST.indexOf(new URL(event.request.url).hostname) > -1) {
 
     // Redirect in SW manually fixed github pages 404s on repo?blah 
-    if(shouldRedirect(event.request)){
-      event.respondWith(Response.redirect(getRedirectUrl(event.request)))
+    if (shouldRedirect(event.request)) {
+      event.respondWith(Response.redirect(getRedirectUrl(event.request)));
       return;
     }
 
@@ -116,7 +115,7 @@ self.addEventListener('fetch', event => {
     // Upgrade from Jake's to Surma's: https://gist.github.com/surma/eb441223daaedf880801ad80006389f1
     const cached = caches.match(event.request);
     const fixedUrl = getFixedUrl(event.request);
-    const fetched = fetch(fixedUrl, {cache: "no-store"});
+    const fetched = fetch(fixedUrl, { cache: 'no-store' });
     const fetchedCopy = fetched.then(resp => resp.clone());
 
     // Call respondWith() with whatever we get first.
@@ -124,16 +123,16 @@ self.addEventListener('fetch', event => {
     // If there’s nothing in cache, wait for the fetch.
     // If neither yields a response, return offline pages.
     event.respondWith(
-      Promise.race([fetched.catch(_ => cached), cached])
+      Promise.race([ fetched.catch(_ => cached), cached ])
         .then(resp => resp || fetched)
         .catch(_ => caches.match('offline.html'))
     );
 
     // Update the cache with the version we fetched (only for ok status)
     event.waitUntil(
-      Promise.all([fetchedCopy, caches.open(RUNTIME)])
-        .then(([response, cache]) => response.ok && cache.put(event.request, response))
-        .catch(_ => {/* eat any errors */})
+      Promise.all([ fetchedCopy, caches.open(RUNTIME) ])
+        .then(([ response, cache ]) => response.ok && cache.put(event.request, response))
+        .catch(_ => { /* eat any errors */ })
     );
   }
 });

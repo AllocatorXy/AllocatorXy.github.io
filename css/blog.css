@@ -494,11 +494,7 @@ pre code {
   left: 0;
   width: 100%;
   z-index: 3;
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", system-ui, SimSun, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "1mn", "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", system-ui, SimSun, sans-serif;
   line-height: 1.7;
 }
 .navbar-custom .navbar-brand {
@@ -1224,9 +1220,19 @@ img::-moz-selection {
   color: #ddd;
 }
 @font-face {
-    font-family: 'monaco';
-    src: url('fonts/Monaco.eot');
-    src: local('☺'), url('../fonts/Monaco.woff') format('woff'), url('../fonts/Monaco.ttf') format('truetype'), url('../fonts/Monaco.svg') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'monaco';
+  src: url('../fonts/Monaco.eot');
+  src: local('☺'), url('../fonts/Monaco.woff') format('woff'), url('../fonts/Monaco.ttf') format('truetype'), url('../fonts/Monaco.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "1mn";
+  src: url("../fonts/mplus-1mn-regular.eot"); /* IE9 */
+  src: url("../fonts/mplus-1mn-regular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+  url("../fonts/mplus-1mn-regular.woff") format("woff"), /* chrome, firefox */
+  url("../fonts/mplus-1mn-regular.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url("../fonts/mplus-1mn-regular.svg#mplus-1mn-regular") format("svg"); /* iOS 4.1- */
+  font-style: normal;
+  font-weight: normal;
 }
