@@ -625,11 +625,14 @@ pre code {
 .intro-header .site-heading {
   padding: 95px 0 70px;
 }
+.intro-header .site-heading h1 {
+  font-family: '1mn-b';
+}
 @media only screen and (min-width: 768px) {
   .intro-header .site-heading {
     padding: 150px 0;
   }
-  @-webkit-keyframes flare{
+  @keyframes flare{
     0%{
       text-shadow: 0 0 20px #fefcc9,10px -10px 30px #feec85,20px -20px 40px #ffae34,20px -40px 50px #f3d131,0 -80px 70px #f38e1c;
     } 
@@ -1236,3 +1239,14 @@ img::-moz-selection {
   font-style: normal;
   font-weight: normal;
 }
+@font-face {
+  font-family: "1mn-b";
+  src: url("../fonts/mplus-1mn-bold.eot"); /* IE9 */
+  src: url("../fonts/mplus-1mn-bold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+  url("../fonts/mplus-1mn-bold.woff") format("woff"), /* chrome, firefox */
+  url("../fonts/mplus-1mn-bold.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url("../fonts/mplus-1mn-bold.svg#mplus-1mn-bold") format("svg"); /* iOS 4.1- */
+  font-style: normal;
+  font-weight: normal;
+}
+
